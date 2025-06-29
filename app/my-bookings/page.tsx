@@ -1,79 +1,32 @@
-"use client";
+'use client';
 
-import GuestLayout from "@/components/layout/GuestLayout";
-import { useEffect, useState } from "react";
-
-type Booking = {
-  _id: string;
-  room: {
-    roomNumber: string;
-    type: string;
-    price: number;
-  };
-  checkIn: string;
-  checkOut: string;
-  totalPrice: number;
-  status: string;
-};
+import { useEffect, useState } from 'react';
+import { getMyBookings } from '../lib/api';
 
 export default function MyBookingsPage() {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [error, setError] = useState("");
-  const token = ""; // TODO: replace with token from context or cookies
+  const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings/my`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to load bookings");
-        }
-
-        const data = await res.json();
-        setBookings(data);
-      } catch (err: any) {
-        setError(err.message);
-      }
-    };
-
-    fetchBookings();
+    getMyBookings().then(data => {
+      console.log('Bookings data:', data);
+      setBookings(data);
+    });
   }, []);
 
   return (
-    <GuestLayout>
-      <h1 className="text-2xl font-bold mb-4">My Bookings</h1>
-
-      {error && <p className="text-red-500">{error}</p>}
-
-      <div className="space-y-4">
-        {bookings.length === 0 && <p>No bookings yet.</p>}
-
-        {bookings.map((booking) => (
-          <div
-            key={booking._id}
-            className="bg-white rounded-xl shadow p-4 space-y-2"
-          >
-            <h2 className="text-lg font-semibold">
-              Room {booking.room.roomNumber} • {booking.room.type}
-            </h2>
-            <p>
-              <span className="font-medium">Check-in:</span>{" "}
-              {new Date(booking.checkIn).toLocaleDateString()}
-            </p>
-            <p>
-              <span className="font-medium">Check-out:</span>{" "}
-              {new Date(booking.checkOut).toLocaleDateString()}
-            </p>
-            <p>Status: <span className="text-blue-600">{booking.status}</span></p>
-            <p>Total: ${booking.totalPrice}</p>
-          </div>
-        ))}
-      </div>
-    </GuestLayout>
+    <div className="max-w-3xl mx-auto py-10">
+      <h1 className="text-2xl font-bold mb-6">My Bookings</h1>
+      <ul className="space-y-4">
+        {Array.isArray(bookings) ? (
+          bookings.map((b: any) => (
+            <li key={b._id} className="p-4 border rounded">
+              Room: {b.room.type} | Check-in: {b.checkIn.slice(0, 10)} | Check-out: {b.checkOut.slice(0, 10)}
+            </li>
+          ))
+        ) : (
+          <p>No bookings found.</p>
+        )}
+      </ul>
+    </div>
   );
 }

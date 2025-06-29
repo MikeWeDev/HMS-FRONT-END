@@ -1,34 +1,60 @@
-'use client';
+// components/navbar.tsx
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-const navLinks = [
-  { name: "Rooms", path: "/rooms" },
-  { name: "My Bookings", path: "/my-bookings" },
-  { name: "Login", path: "/auth/login" },
-];
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
-  const pathname = usePathname();
+  // Placeholder for user login state
+  const [user, setUser] = useState<{ name: string } | null>(null);
+
+  // Simulate user login state fetching, replace with real auth logic
+  useEffect(() => {
+    // Example: check localStorage or API call to get user info
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Add your logout logic here
+    setUser(null);
+    localStorage.removeItem("user");
+  };
 
   return (
-    <nav className="bg-white shadow sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-blue-600">HotelSys</Link>
-        <div className="flex gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              href={link.path}
-              className={`hover:text-blue-500 transition ${
-                pathname === link.path ? "text-blue-600 font-semibold" : "text-gray-700"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
+    <nav className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
+      <Link href="/" className="font-bold text-xl">
+        HotelSys
+      </Link>
+
+      <div className="space-x-6 flex items-center">
+        <Link href="/" className="hover:underline">
+          Home
+        </Link>
+        <Link href="/rooms" className="hover:underline">
+          Rooms
+        </Link>
+        <Link href="/my-bookings" className="hover:underline">
+          Bookings
+        </Link>
+        {user && (
+          <Link href="/profile" className="hover:underline">
+            Profile
+          </Link>
+        )}
+      </div>
+
+      <div>
+        {user ? (
+          <button onClick={handleLogout} className="bg-red-600 px-3 py-1 rounded">
+            Logout
+          </button>
+        ) : (
+          <Link href="/login" className="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   );

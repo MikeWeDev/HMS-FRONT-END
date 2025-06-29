@@ -1,38 +1,24 @@
-import GuestLayout from "@/components/layout/GuestLayout";
-import RoomCard from "@/components/features/RoomCard";
+'use client';
 
-type Room = {
-  _id: string;
-  roomNumber: string;
-  type: string;
-  price: number;
-  capacity: number;
-  amenities: string[];
-};
+import { useEffect, useState } from 'react';
+import { getRooms } from '../lib/api';
+import RoomCard from '../components/RoomCard';
 
-export default async function RoomsPage() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rooms`, {
-    cache: "no-store",
-  });
+export default function RoomsPage() {
+  const [rooms, setRooms] = useState([]);
 
-  if (!res.ok) {
-    return (
-      <GuestLayout>
-        <p className="text-red-600">Failed to load rooms.</p>
-      </GuestLayout>
-    );
-  }
-
-  const rooms: Room[] = await res.json();
+  useEffect(() => {
+    getRooms().then(setRooms);
+  }, []);
 
   return (
-    <GuestLayout>
-      <h1 className="text-2xl font-bold mb-4">Available Rooms</h1>
-      <div className="grid md:grid-cols-2 gap-6">
-        {rooms.map((room) => (
-          <RoomCard key={room._id} {...room} />
+    <div className="max-w-4xl mx-auto py-10">
+      <h1 className="text-2xl font-bold mb-6">Available Rooms</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {rooms.map((room: any) => (
+          <RoomCard key={room._id} room={room} />
         ))}
       </div>
-    </GuestLayout>
+    </div>
   );
 }

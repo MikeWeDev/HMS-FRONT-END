@@ -1,8 +1,7 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import GuestLayout from "@/components/layout/GuestLayout";
+import GuestLayout from "../../components/layout/GuestLayout";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
