@@ -1,0 +1,122 @@
+[
+  {
+    "id": "room-101",
+    "name": "Deluxe King Room",
+    "price": 120,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?hotel,room",
+    "description": "Spacious room with a king-sized bed, ensuite bathroom, and city view."
+  },
+  {
+    "id": "room-102",
+    "name": "Standard Double Room",
+    "price": 90,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?hotel,bed",
+    "description": "Comfortable double bed, air conditioning, and free Wi-Fi."
+  },
+  {
+    "id": "room-201",
+    "name": "Suite with Balcony",
+    "price": 180,
+    "capacity": 3,
+    "image": "https://source.unsplash.com/featured/?luxury,hotel",
+    "description": "Large suite with a balcony, sofa, and minibar."
+  },
+  {
+    "id": "room-202",
+    "name": "Economy Single Room",
+    "price": 60,
+    "capacity": 1,
+    "image": "https://source.unsplash.com/featured/?small,hotel,room",
+    "description": "Compact room ideal for solo travelers with essential amenities."
+  },
+  {
+    "id": "room-203",
+    "name": "Family Suite",
+    "price": 200,
+    "capacity": 4,
+    "image": "https://source.unsplash.com/featured/?family,hotel,room",
+    "description": "Spacious suite suitable for families with 2 double beds and kitchenette."
+  },
+  {
+    "id": "room-301",
+    "name": "Executive King Suite",
+    "price": 250,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?executive,hotel,room",
+    "description": "Premium suite with office space, jacuzzi, and lounge access."
+  },
+  {
+    "id": "room-302",
+    "name": "Garden View Room",
+    "price": 130,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?garden,hotel,room",
+    "description": "Peaceful room with a garden view and natural light."
+  },
+  {
+    "id": "room-303",
+    "name": "Penthouse Suite",
+    "price": 400,
+    "capacity": 3,
+    "image": "https://source.unsplash.com/featured/?penthouse,hotel,room",
+    "description": "Top-floor suite with skyline views, luxury bath, and private terrace."
+  },
+  {
+    "id": "room-304",
+    "name": "Studio Room",
+    "price": 100,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?studio,hotel,room",
+    "description": "Open-plan studio with kitchenette, dining, and lounge area."
+  },
+  {
+    "id": "room-305",
+    "name": "Business Twin Room",
+    "price": 110,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?business,hotel,room",
+    "description": "Twin room designed for business travelers, includes work desk and Wi-Fi."
+  },
+  {
+    "id": "room-306",
+    "name": "Honeymoon Suite",
+    "price": 300,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?honeymoon,hotel,room",
+    "description": "Romantic suite with jacuzzi, roses, and ambient lighting."
+  },
+  {
+    "id": "room-307",
+    "name": "Accessible Room",
+    "price": 100,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?accessible,hotel,room",
+    "description": "Barrier-free room designed for guests with disabilities."
+  },
+  {
+    "id": "room-401",
+    "name": "City View Room",
+    "price": 140,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?city,view,hotel,room",
+    "description": "Room with panoramic city views and modern decor."
+  },
+  {
+    "id": "room-402",
+    "name": "Corner Deluxe Room",
+    "price": 160,
+    "capacity": 2,
+    "image": "https://source.unsplash.com/featured/?corner,hotel,room",
+    "description": "Bright corner room with dual windows and deluxe furnishings."
+  },
+  {
+    "id": "room-403",
+    "name": "Luxury Presidential Suite",
+    "price": 500,
+    "capacity": 4,
+    "image": "https://source.unsplash.com/featured/?presidential,hotel,room",
+    "description": "Top-tier suite with full-service living space, dining area, and butler service."
+  }
+]
