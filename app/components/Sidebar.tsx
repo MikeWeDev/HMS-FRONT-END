@@ -15,7 +15,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-export default function Sidebar() {
+export default function GustSidebar() {
   return (
     <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between sticky top-0 h-screen overflow-y-auto">
       <div>
@@ -28,57 +28,45 @@ export default function Sidebar() {
         {/* Navigation */}
         <nav className="flex flex-col gap-4 text-sm font-medium">
           <Link
-            href="/guest"
+            href="/features/guest"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition"
           >
             <LayoutDashboard className="w-4 h-4 text-blue-600" />
             Dashboard
           </Link>
           <Link
-            href="/guest/my-bookings"
+            href="/features/guest/my-bookings"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition"
           >
             <CalendarDays className="w-4 h-4 text-blue-600" />
             My Bookings
           </Link>
           <Link
-            href="/guest-profile"
+            href="/features/guest/profile"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition"
           >
             <User className="w-4 h-4 text-blue-600" />
             Profile
           </Link>
           <Link
-            href="/payment-history"
+            href="/features/guest/payment-history"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition"
           >
             <CreditCard className="w-4 h-4 text-blue-600" />
             Payment History
           </Link>
+         
           <Link
-            href="/security-settings"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition"
-          >
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
-            Security
-          </Link>
-          <Link
-            href="/contact-support"
+            href="/features/guest/contact-support"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition"
           >
             <Phone className="w-4 h-4 text-blue-600" />
             Contact Support
           </Link>
 
+
           <Link
-            href="/feedback"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition"
-          >
-            <MessageSquareText className="w-4 h-4 text-blue-600" />
-            Feedback
-          </Link>
-          <Link
-            href="/settings"
+            href="/features/guest/settings"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition"
           >
             <Settings className="w-4 h-4 text-blue-600" />

@@ -5,7 +5,8 @@
     "price": 120,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?hotel,room",
-    "description": "Spacious room with a king-sized bed, ensuite bathroom, and city view."
+    "description": "Spacious room with a king-sized bed, ensuite bathroom, and city view.",
+    "status": "available"
   },
   {
     "id": "room-102",
@@ -13,7 +14,8 @@
     "price": 90,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?hotel,bed",
-    "description": "Comfortable double bed, air conditioning, and free Wi-Fi."
+    "description": "Comfortable double bed, air conditioning, and free Wi-Fi.",
+    "status": "available"
   },
   {
     "id": "room-201",
@@ -21,7 +23,8 @@
     "price": 180,
     "capacity": 3,
     "image": "https://source.unsplash.com/featured/?luxury,hotel",
-    "description": "Large suite with a balcony, sofa, and minibar."
+    "description": "Large suite with a balcony, sofa, and minibar.",
+    "status": "available"
   },
   {
     "id": "room-202",
@@ -29,7 +32,8 @@
     "price": 60,
     "capacity": 1,
     "image": "https://source.unsplash.com/featured/?small,hotel,room",
-    "description": "Compact room ideal for solo travelers with essential amenities."
+    "description": "Compact room ideal for solo travelers with essential amenities.",
+    "status": "available"
   },
   {
     "id": "room-203",
@@ -37,7 +41,8 @@
     "price": 200,
     "capacity": 4,
     "image": "https://source.unsplash.com/featured/?family,hotel,room",
-    "description": "Spacious suite suitable for families with 2 double beds and kitchenette."
+    "description": "Spacious suite suitable for families with 2 double beds and kitchenette.",
+    "status": "available"
   },
   {
     "id": "room-301",
@@ -45,7 +50,8 @@
     "price": 250,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?executive,hotel,room",
-    "description": "Premium suite with office space, jacuzzi, and lounge access."
+    "description": "Premium suite with office space, jacuzzi, and lounge access.",
+    "status": "available"
   },
   {
     "id": "room-302",
@@ -53,7 +59,8 @@
     "price": 130,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?garden,hotel,room",
-    "description": "Peaceful room with a garden view and natural light."
+    "description": "Peaceful room with a garden view and natural light.",
+    "status": "available"
   },
   {
     "id": "room-303",
@@ -61,7 +68,8 @@
     "price": 400,
     "capacity": 3,
     "image": "https://source.unsplash.com/featured/?penthouse,hotel,room",
-    "description": "Top-floor suite with skyline views, luxury bath, and private terrace."
+    "description": "Top-floor suite with skyline views, luxury bath, and private terrace.",
+    "status": "available"
   },
   {
     "id": "room-304",
@@ -69,7 +77,8 @@
     "price": 100,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?studio,hotel,room",
-    "description": "Open-plan studio with kitchenette, dining, and lounge area."
+    "description": "Open-plan studio with kitchenette, dining, and lounge area.",
+    "status": "available"
   },
   {
     "id": "room-305",
@@ -77,7 +86,8 @@
     "price": 110,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?business,hotel,room",
-    "description": "Twin room designed for business travelers, includes work desk and Wi-Fi."
+    "description": "Twin room designed for business travelers, includes work desk and Wi-Fi.",
+    "status": "available"
   },
   {
     "id": "room-306",
@@ -85,7 +95,8 @@
     "price": 300,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?honeymoon,hotel,room",
-    "description": "Romantic suite with jacuzzi, roses, and ambient lighting."
+    "description": "Romantic suite with jacuzzi, roses, and ambient lighting.",
+    "status": "available"
   },
   {
     "id": "room-307",
@@ -93,7 +104,8 @@
     "price": 100,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?accessible,hotel,room",
-    "description": "Barrier-free room designed for guests with disabilities."
+    "description": "Barrier-free room designed for guests with disabilities.",
+    "status": "available"
   },
   {
     "id": "room-401",
@@ -101,7 +113,8 @@
     "price": 140,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?city,view,hotel,room",
-    "description": "Room with panoramic city views and modern decor."
+    "description": "Room with panoramic city views and modern decor.",
+    "status": "available"
   },
   {
     "id": "room-402",
@@ -109,7 +122,8 @@
     "price": 160,
     "capacity": 2,
     "image": "https://source.unsplash.com/featured/?corner,hotel,room",
-    "description": "Bright corner room with dual windows and deluxe furnishings."
+    "description": "Bright corner room with dual windows and deluxe furnishings.",
+    "status": "available"
   },
   {
     "id": "room-403",
@@ -117,6 +131,7 @@
     "price": 500,
     "capacity": 4,
     "image": "https://source.unsplash.com/featured/?presidential,hotel,room",
-    "description": "Top-tier suite with full-service living space, dining area, and butler service."
+    "description": "Top-tier suite with full-service living space, dining area, and butler service.",
+    "status": "available"
   }
 ]
