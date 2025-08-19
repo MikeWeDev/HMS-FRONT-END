@@ -11,7 +11,7 @@ const CheckoutPage = () => {
   useEffect(() => {
     const fetchCheckedInRooms = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/checkout`);
+        const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/checkout`);
         if (!res.ok) {
           throw new Error('Failed to fetch checked-in rooms');
         }

@@ -29,7 +29,7 @@ export default function BOOKEDGUST() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("http://localhost:5000/api/rooms");
+        const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
         if (!res.ok) throw new Error("Failed to fetch rooms");
 
         const data = await res.json();

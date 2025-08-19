@@ -34,7 +34,7 @@ export default function RoomCheckInPage() {
     async function fetchRoom() {
       log('Fetching room with ID', id);
       try {
-        const res = await fetch(`http://localhost:5000/api/rooms/${id}`);
+        const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/${id}`);
         const data = await res.json();
         log('Fetched room data', data);
         setRoom(data);
