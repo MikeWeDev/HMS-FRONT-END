@@ -1,7 +1,7 @@
 'use client'; // This directive marks the component as a Client Component in Next.js
 
 import React, { useState } from 'react';
-import Head from 'next/head'; // For managing document head tags like title
+// Removed: import Head from 'next/head'; // No longer needed here as fonts are loaded globally
 
 // Define an interface for any settings state you might manage locally
 interface SettingsState {
@@ -35,11 +35,9 @@ const ReceptionistSettingsPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 font-inter antialiased p-8">
-      <Head>
-        <title>Settings | Receptionist Panel</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      </Head>
+    // Removed 'font-inter' class here, as it should be applied globally in layout.tsx
+    <div className="flex flex-col min-h-screen bg-gray-100 antialiased p-8">
+      {/* Removed the <Head> component and its content related to fonts */}
 
       <div className="max-w-3xl mx-auto w-full bg-white rounded-lg shadow-xl p-8 space-y-8">
         <h1 className="text-4xl font-bold text-gray-800 border-b pb-4 mb-6">Receptionist Settings</h1>
@@ -47,7 +45,7 @@ const ReceptionistSettingsPage = () => {
         {/* General Settings Section */}
         <section className="space-y-6">
           <h2 className="text-2xl font-semibold text-gray-700">General</h2>
-          
+
           {/* Notifications Toggle */}
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm">
             <label htmlFor="notificationsEnabled" className="text-lg text-gray-700 font-medium">

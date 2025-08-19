@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-
+// Initialize the Inter font
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +15,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` antialiased`}>
+      {/* Apply the font's className to the body tag */}
+      <body >
         <div className="flex min-h-screen">
           <main className="flex-1 bg-gray-50">
             {children}

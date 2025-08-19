@@ -7,10 +7,7 @@ import {
   CalendarDays,
   User,
   CreditCard,
-  ShieldCheck,
   Phone,
-  HelpCircle,
-  MessageSquareText,
   Settings,
   LogOut,
 } from "lucide-react";

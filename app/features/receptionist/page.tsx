@@ -4,6 +4,19 @@ import { useEffect, useState } from "react";
 import RoomCard from "../../components/RoomCard";
 import { BedDouble, Loader2 } from "lucide-react";
 
+// New interface for the raw data fetched from the API
+interface RawRoomApiData {
+  _id: string;
+  roomNumber: string;
+  type: string;
+  price: number;
+  capacity: number;
+  amenities: string[];
+  isAvailable: boolean;
+  status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+}
+
+// Your existing Room interface remains the same
 export interface Room {
   _id: string;
   roomNumber: string;
@@ -33,12 +46,11 @@ export default function ReceptionistDashboardPage() {
       const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
       if (!res.ok) throw new Error("Failed to fetch rooms");
 
-      const data = await res.json();
-      console.log("🔍 Raw data from API:", data);
-
-      const roomsWithStatus: Room[] = data.map((room: any) => {
-        const status = room.status || "Available";  // fallback
-
+      const data: RawRoomApiData[] = await res.json();
+      
+      const roomsWithStatus: Room[] = data.map((room) => {
+        const status = room.status || "Available"; // fallback
+        
         const mappedRoom: Room = {
           ...room,
           id: room._id,
@@ -47,16 +59,18 @@ export default function ReceptionistDashboardPage() {
           image: "/room-placeholder.jpg",
           status,
         };
-
-        console.log(`🧩 Mapped Room ${room.roomNumber}:`, mappedRoom);
+        
         return mappedRoom;
       });
-
+      
       setRooms(roomsWithStatus);
       setFilteredRooms(roomsWithStatus);
-    } catch (err: any) {
-      console.error("❌ Fetch error:", err);
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -67,14 +81,10 @@ export default function ReceptionistDashboardPage() {
   }, []);
 
   useEffect(() => {
-    console.log("📂 Current filter:", filterStatus);
-    console.log("🛏️ All rooms:", rooms.map((r) => ({ id: r.id, status: r.status })));
-
     if (filterStatus === "All") {
       setFilteredRooms(rooms);
     } else {
       const filtered = rooms.filter((room) => room.status === filterStatus);
-      console.log("✅ Filtered rooms:", filtered.map((r) => ({ id: r.id, status: r.status })));
       setFilteredRooms(filtered);
     }
   }, [filterStatus, rooms]);

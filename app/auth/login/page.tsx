@@ -99,14 +99,13 @@ export default function LoginPage() {
           </p>
         )
         }
- <Link href="/auth/register" passHref>
+           <Link href="/auth/register" >
            <p className="font-medium text-indigo-600 hover:text-indigo-500 text-center">
-            Didn't Have An Account ? Sign up
-          </p>
-          </Link>      </div>
+Don&apos;t have an account?          </p>
+          </Link>     
+           </div>
     </div>
   );
 }
 
 
-//href=""

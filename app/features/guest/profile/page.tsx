@@ -1,7 +1,7 @@
 'use client'; // This directive marks the component as a Client Component
 
 import React, { useState } from 'react';
-import Head from 'next/head'; // For managing document head tags like title
+// Removed: import Head from 'next/head'; // No longer needed here as fonts are loaded globally
 
 // Define an interface for the guest profile data
 interface GuestProfile {
@@ -9,19 +9,19 @@ interface GuestProfile {
   email: string;
   phone: string;
   loyaltyPoints: number;
-  // This would typically come from your booking schema or a separate guest schema
   recentBookings: {
     id: string;
     roomNumber: string;
-    checkIn: string; // Using string for simplicity, can be Date
-    checkOut: string; // Using string for simplicity, can be Date
+    checkIn: string;
+    checkOut: string;
     status: string;
   }[];
 }
 
 const GuestProfilePage = () => {
   // Sample static guest data (will be dynamic later)
-  const [guestProfile, setGuestProfile] = useState<GuestProfile>({
+  // setGuestProfile is kept here as you'll likely use it for editing in the future.
+  const [guestProfile] = useState<GuestProfile>({
     name: 'John Doe',
     email: 'john.doe@example.com',
     phone: '+1 (555) 123-4567',
@@ -53,16 +53,14 @@ const GuestProfilePage = () => {
 
   // Handler for editing profile details (placeholder)
   const handleEditProfile = () => {
-    alert('Edit profile functionality will be implemented later!');
+    console.log('Edit profile functionality will be implemented later!'); // Replaced alert()
     // In a real application, this would open a modal or navigate to an edit page
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 font-inter antialiased p-8">
-      <Head>
-        <title>Guest Profile | Hotel System</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      </Head>
+    // Removed 'font-inter' class as it should be applied globally in layout.tsx
+    <div className="flex flex-col min-h-screen bg-gray-100 antialiased p-8">
+      {/* Removed the <Head> component and its content related to fonts */}
 
       <div className="max-w-4xl mx-auto w-full bg-white rounded-lg shadow-xl p-8 space-y-8">
         <h1 className="text-4xl font-bold text-gray-800 border-b pb-4 mb-6">Your Profile</h1>

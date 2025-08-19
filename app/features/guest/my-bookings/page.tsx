@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { FaEdit, FaTrashAlt } from 'react-icons/fa'; // Import icons
 
 interface Room {
   _id: string;
@@ -19,62 +20,64 @@ interface Booking {
   createdAt: string;
 }
 
-export default function MyBookingsPage() {
+// Separate the main logic into a new component
+function MyBookingsContent() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const searchParams = useSearchParams();
 
-  // Editing state
   const [editIndex, setEditIndex] = useState<number>(-1);
-  const [editFields, setEditFields] = useState<Partial<Booking>>({});
 
-  useEffect(() => {
-    async function fetchBookings() {
-      setLoading(true);
-      setError("");
-      const guestId = localStorage.getItem("guestId");
+  const fetchBookings = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    const guestId = localStorage.getItem("guestId");
 
-      if (!guestId) {
-        setError("No guest ID found. You have not booked any rooms yet.");
-        setBookings([]);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const res = await fetch(`http://localhost:5000/api/bookings/my/${guestId}`);
-        const responseData = await res.json();
-
-        if (!res.ok) {
-          // Handle 404 (no bookings) separately from real errors
-          if (res.status === 404 && responseData.message === "No bookings found for this guest ID") {
-            setBookings([]);
-            setError(""); // suppress red error message
-            return;
-          }
-
-          throw new Error(responseData.message || "Failed to fetch bookings");
-        }
-
-        if (!Array.isArray(responseData)) {
-          throw new Error("Fetched data is not an array");
-        }
-
-        setBookings(
-          responseData.sort(
-            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
-        );
-      } catch (err: any) {
-        setError(err.message || "An error occurred");
-        setBookings([]);
-      } finally {
-        setLoading(false);
-      }
+    if (!guestId) {
+      setError("No guest ID found. You have not booked any rooms yet.");
+      setBookings([]);
+      setLoading(false);
+      return;
     }
 
+    try {
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/bookings/my/${guestId}`);
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 404 && responseData.message === "No bookings found for this guest ID") {
+          setBookings([]);
+          setError("");
+          return;
+        }
+
+        throw new Error(responseData.message || "Failed to fetch bookings");
+      }
+
+      if (!Array.isArray(responseData)) {
+        throw new Error("Fetched data is not an array");
+      }
+
+      setBookings(
+        (responseData as Booking[]).sort(
+          (a: Booking, b: Booking) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+      );
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "An error occurred");
+      } else {
+        setError("An unknown error occurred");
+      }
+      setBookings([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
     fetchBookings();
 
     if (searchParams.get("success") === "1") {
@@ -87,13 +90,13 @@ export default function MyBookingsPage() {
 
       return () => clearTimeout(timeout);
     }
-  }, [searchParams]);
+  }, [searchParams, fetchBookings]);
 
   async function deleteBooking(index: number) {
     const bookingToDelete = bookings[index];
 
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${bookingToDelete._id}`, {
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/bookings/${bookingToDelete._id}`, {
         method: "DELETE",
       });
 
@@ -108,16 +111,18 @@ export default function MyBookingsPage() {
 
       if (editIndex === index) {
         setEditIndex(-1);
-        setEditFields({});
       }
-    } catch (err: any) {
-      alert(`Error deleting booking: ${err.message || err.toString()}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(`Error deleting booking: ${err.message}`);
+      } else {
+        alert("An unknown error occurred while deleting the booking.");
+      }
     }
   }
 
   function startEditing(index: number) {
     setEditIndex(index);
-    setEditFields(bookings[index]);
   }
 
   function formatDate(dateStr: string) {
@@ -161,7 +166,7 @@ export default function MyBookingsPage() {
             >
               {editIndex === index ? (
                 <div>
-                  {/* Editable form implementation can be added later */}
+                  <p>Editing form for Booking ID: {booking._id}</p>
                 </div>
               ) : (
                 <div
@@ -182,7 +187,20 @@ export default function MyBookingsPage() {
                     </p>
                   </div>
                   <div style={{ display: "flex", gap: "0.5rem" }}>
-                   
+                    <button
+                      onClick={() => startEditing(index)}
+                      style={{
+                        backgroundColor: "#f59e0b",
+                        color: "white",
+                        padding: "0.5rem 0.75rem",
+                        borderRadius: "0.375rem",
+                        border: "none",
+                        cursor: "pointer",
+                        fontWeight: "500",
+                      }}
+                    >
+                      <FaEdit />
+                    </button>
                     <button
                       onClick={() => deleteBooking(index)}
                       style={{
@@ -195,7 +213,7 @@ export default function MyBookingsPage() {
                         fontWeight: "500",
                       }}
                     >
-                      Delete
+                      <FaTrashAlt />
                     </button>
                   </div>
                 </div>
@@ -205,5 +223,14 @@ export default function MyBookingsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+// Export the main page component wrapped in Suspense
+export default function MyBookingsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MyBookingsContent />
+    </Suspense>
   );
 }

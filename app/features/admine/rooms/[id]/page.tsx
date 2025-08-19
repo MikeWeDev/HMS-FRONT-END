@@ -1,64 +1,112 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2, Check } from "lucide-react";
 
-const statusOptions = ["Available", "Booked", "Checked-In"];
+// Assuming this Room interface is consistent with your backend data structure
+// You might want to define this in a shared types file (e.g., types/index.ts)
+export interface Room {
+  _id: string;
+  roomNumber: string;
+  type: string;
+  price: number;
+  capacity: number;
+  amenities: string[];
+  isAvailable: boolean;
+  status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+}
+
+const statusOptions: Room["status"][] = ["Available", "Booked", "Checked-In"];
 
 export default function EditRoomPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [room, setRoom] = useState<any>(null);
-  const [status, setStatus] = useState("");
+  // 1. Specify the type for room state: Room or null
+  const [room, setRoom] = useState<Room | null>(null);
+  // Ensure status state matches the defined Room status types
+  const [status, setStatus] = useState<Room["status"]>('Available'); // Default to 'Available' or suitable initial
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState("");
 
-  useEffect(() => {
-    async function fetchRoom() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`http://localhost:5000/api/rooms/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch room");
-        const data = await res.json();
-        setRoom(data);
-        setStatus(data.status);
-      } catch (err: any) {
-        setError(err.message || "Something went wrong");
-      } finally {
-        setLoading(false);
+  const fetchRoom = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Ensure id is a string before using it in the URL
+      if (typeof id !== 'string') {
+        throw new Error("Invalid Room ID provided.");
       }
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/${id}`);
+      if (!res.ok) {
+        const errorData = await res.json(); // Attempt to parse error message
+        throw new Error(errorData.message || "Failed to fetch room");
+      }
+      // 2. Type the fetched data
+      const data: Room = await res.json();
+      setRoom(data);
+      // Ensure the fetched status is one of the valid RoomStatus types
+      if (statusOptions.includes(data.status)) {
+        setStatus(data.status);
+      } else {
+        // Handle unexpected status from backend, e.g., default to 'Available'
+        setStatus('Available');
+        console.warn(`Unexpected room status received: ${data.status}. Defaulting to 'Available'.`);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError("Error fetching room: " + err.message);
+        console.error("Error fetching room:", err);
+      } else {
+        setError("An unknown error occurred while fetching the room.");
+        console.error("Unknown error fetching room:", err);
+      }
+    } finally {
+      setLoading(false);
     }
+  }, [id]); // Add id to dependency array
+
+  useEffect(() => {
     fetchRoom();
-  }, [id]);
+  }, [fetchRoom]); // Dependency array includes fetchRoom (due to useCallback)
 
   const handleSave = async () => {
     setSaving(true);
     setError(null);
     setSuccessMsg("");
     try {
-      const res = await fetch(`http://localhost:5000/api/rooms/${id}/status`, {
+      if (typeof id !== 'string') {
+        throw new Error("Invalid Room ID for saving.");
+      }
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/${id}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
       });
-      const data = await res.json();
+      // 3. Type the response data for update
+      const data: { message: string } = await res.json(); // Assuming the API returns a message
       if (!res.ok) throw new Error(data.message || "Failed to update room");
 
       setSuccessMsg(`Room status updated to "${status}" successfully!`);
 
       setTimeout(() => router.push("/features/admine/rooms"), 1200);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError("Error saving changes: " + err.message);
+        console.error("Error saving changes:", err);
+      } else {
+        setError("An unknown error occurred while saving changes.");
+        console.error("Unknown error saving changes:", err);
+      }
     } finally {
       setSaving(false);
     }
   };
 
-  const statusBadgeColor = (status: string) => {
+  const statusBadgeColor = (status: Room["status"]) => {
     switch (status) {
       case "Available": return "bg-green-100 text-green-800";
       case "Booked": return "bg-yellow-100 text-yellow-800";
@@ -68,12 +116,18 @@ export default function EditRoomPage() {
   };
 
   if (loading) return (
-    <div className="flex items-center gap-2 text-gray-600">
-      <Loader2 className="animate-spin w-5 h-5" /> Loading...
+    <div className="flex items-center justify-center min-h-[calc(100vh-20px)]">
+      <Loader2 className="animate-spin w-8 h-8 text-gray-600" />
+      <span className="ml-2 text-lg text-gray-600">Loading room details...</span>
     </div>
   );
 
-  if (error) return <div className="text-red-600 font-medium">{error}</div>;
+  // Handle case where room is null after loading (e.g., room not found)
+  if (error || !room) return (
+    <div className="flex items-center justify-center min-h-[calc(100vh-20px)] text-red-600 text-lg font-medium">
+      {error || "Room details could not be loaded or room not found."}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-10 flex justify-center items-start">
@@ -104,7 +158,7 @@ export default function EditRoomPage() {
           <label className="block font-medium mb-2 text-gray-700">Room Status</label>
           <select
             value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            onChange={(e) => setStatus(e.target.value as Room["status"])} // Cast to correct type
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             {statusOptions.map((opt) => (

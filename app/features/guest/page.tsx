@@ -22,6 +22,19 @@ export interface Room {
   image: string;      // e.g., placeholder path
 }
 
+// Define the interface for the raw data from the API
+export interface RawRoom {
+    _id: string;
+    roomNumber: string;
+    type: string;
+    price: number;
+    capacity: number;
+    amenities: string[];
+    isAvailable: boolean;
+    // status and other fields might not exist in the raw data
+    status?: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+}
+
 export default function GuestDashboardPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,28 +43,32 @@ export default function GuestDashboardPage() {
 useEffect(() => {
   async function fetchRooms() {
     try {
-      const res = await fetch("http://localhost:5000/api/rooms");
+      const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
       if (!res.ok) {
         throw new Error("Failed to fetch rooms");
       }
 
-      const data = await res.json();
-
+       const data: RawRoom[] = await res.json();  
       // Filter only available rooms
-      const availableRooms = data.filter((room: any) => room.isAvailable === true);
+ const availableRooms = data.filter((room) => room.isAvailable === true);
+     const roomsWithStatus: Room[] = availableRooms.map((room) => ({
+          ...room,
+          id: room._id, // Add id field for RoomCard
+          status: "Available", // Since filtered only available
+          name: `Room ${room.roomNumber}`,
+          description: `Type: ${room.type} • Capacity: ${room.capacity}`,
+          image: "/room-placeholder.jpg", // Replace with real image if available
+        }));
 
-      const roomsWithStatus: Room[] = availableRooms.map((room: any) => ({
-        ...room,
-        id: room._id, // Add id field for RoomCard
-        status: "Available", // Since filtered only available
-        name: `Room ${room.roomNumber}`,
-        description: `Type: ${room.type} • Capacity: ${room.capacity}`,
-        image: "/room-placeholder.jpg", // Replace with real image if available
-      }));
-
-      setRooms(roomsWithStatus);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+        setRooms(roomsWithStatus);
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    // TypeScript now knows 'err' is an Error object
+    setError(err.message);
+  } else {
+    // Handle cases where the error isn't an Error object
+    setError('An unknown error occurred');
+  }
     } finally {
       setLoading(false);
     }

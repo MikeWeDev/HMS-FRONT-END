@@ -22,15 +22,19 @@ export default function StaffPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/admin/users");
+      const res = await fetch("https://hms-backend-2k1m.onrender.com/api/auth/admin/users");
       if (!res.ok) throw new Error("Failed to fetch users");
       const data = await res.json();
       // Filter out guests
       const staff = data.data.filter((u: User) => u.role !== "guest");
       setUsers(staff || []);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
+    }catch (error: unknown) {
+        if (error instanceof Error) {
+          alert("Checkout failed: " + error.message);
+        } else {
+          alert("Checkout failed: Unknown error");
+        }
+      }finally {
       setLoading(false);
     }
   }
@@ -43,15 +47,19 @@ export default function StaffPage() {
     if (!confirm("Are you sure you want to delete this user?")) return;
     setRefreshing(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/admin/users/${id}`, {
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/auth/admin/users/${id}`, {
         method: "DELETE"
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to delete user");
       setUsers(users.filter(u => u._id !== id));
-    } catch (err: any) {
-      alert(err.message || "Something went wrong");
-    } finally {
+    }catch (error: unknown) {
+        if (error instanceof Error) {
+          alert("Checkout failed: " + error.message);
+        } else {
+          alert("Checkout failed: Unknown error");
+        }
+      } finally {
       setRefreshing(false);
     }
   };
@@ -60,7 +68,6 @@ export default function StaffPage() {
   const totalStaff = users.length;
   const receptionists = users.filter(u => u.role === "receptionist").length;
   const admins = users.filter(u => u.role === "admin").length;
-  const employees = users.filter(u => u.role === "employee").length;
 
   return (
     <div className="flex min-h-screen bg-gray-50 text-gray-800">

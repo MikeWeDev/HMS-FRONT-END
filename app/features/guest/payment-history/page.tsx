@@ -1,21 +1,21 @@
-'use client'; // This directive marks the component as a Client Component
+'use client';
 
 import React, { useState } from 'react';
-import Head from 'next/head'; // For managing document head tags like title
+// Removed: import Head from 'next/head';
 
 // Define an interface for a single payment record
 interface PaymentRecord {
   id: string;
   amount: number;
-  date: string; // Using string for simplicity, can be Date
+  date: string;
   method: string;
   status: 'Completed' | 'Pending' | 'Failed';
-  description?: string; // Optional field for payment notes
+  description?: string;
 }
 
 const PaymentHistoryPage = () => {
-  // Sample static payment history data (will be dynamic later)
-  const [paymentHistory, setPaymentHistory] = useState<PaymentRecord[]>([
+  // Use a constant for static data or keep useState without the setter if not needed
+  const [paymentHistory] = useState<PaymentRecord[]>([
     {
       id: 'pay001',
       amount: 250.00,
@@ -60,11 +60,8 @@ const PaymentHistoryPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 font-inter antialiased p-8">
-      <Head>
-        <title>Payment History | Hotel System</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      </Head>
-
+      {/* Removed: Head component with font link */}
+      
       <div className="max-w-4xl mx-auto w-full bg-white rounded-lg shadow-xl p-8 space-y-8">
         <h1 className="text-4xl font-bold text-gray-800 border-b pb-4 mb-6">Payment History</h1>
 

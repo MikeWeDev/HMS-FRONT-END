@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import RoomCard from "../../../components/RoomCard";
 import { BedDouble, Loader2 } from "lucide-react";
 
-export interface Room {
+// Define the interface for the raw data from the API
+export interface RawRoom {
   _id: string;
   roomNumber: string;
   type: string;
@@ -13,6 +14,10 @@ export interface Room {
   amenities: string[];
   isAvailable: boolean;
   status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+}
+
+// Define the final interface that includes the derived fields
+export interface Room extends RawRoom {
   id: string;
   name: string;
   description: string;
@@ -32,11 +37,13 @@ export default function BOOKEDGUST() {
         const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
         if (!res.ok) throw new Error("Failed to fetch rooms");
 
-        const data = await res.json();
+        // Explicitly type the fetched data as an array of RawRoom
+        const data: RawRoom[] = await res.json();
 
-        const filtered = data
-          .filter((room: any) => room.status === "Booked")
-          .map((room: any) => ({
+        // Filter and map the data using the defined types
+        const filtered: Room[] = data
+          .filter((room) => room.status === "Booked")
+          .map((room) => ({
             ...room,
             id: room._id,
             name: `Room ${room.roomNumber}`,
@@ -45,8 +52,12 @@ export default function BOOKEDGUST() {
           }));
 
         setBookedRooms(filtered);
-      } catch (err: any) {
-        setError(err.message || "Something went wrong");
+      } catch (err: unknown) { // Change 'any' to 'unknown' for better type safety
+        if (err instanceof Error) {
+          setError(err.message || "Something went wrong");
+        } else {
+          setError("An unknown error occurred.");
+        }
       } finally {
         setLoading(false);
       }

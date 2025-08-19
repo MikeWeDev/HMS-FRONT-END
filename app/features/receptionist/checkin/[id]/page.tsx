@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 interface Room {
   _id: string;
@@ -18,18 +18,16 @@ interface Room {
 
 export default function RoomCheckInPage() {
   const { id } = useParams();
-  const router = useRouter();
 
   const [room, setRoom] = useState<Room | null>(null);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [debugLog, setDebugLog] = useState<string[]>([]);
 
-  const log = (msg: string, data?: any) => {
+ const log = (msg: string, data?: unknown) => {
     console.log(`[DEBUG] ${msg}`, data);
     setDebugLog((prev) => [...prev, `${msg}${data ? ': ' + JSON.stringify(data) : ''}`]);
   };
-
   useEffect(() => {
     async function fetchRoom() {
       log('Fetching room with ID', id);
@@ -56,7 +54,7 @@ export default function RoomCheckInPage() {
   const handleCheckIn = async () => {
     log('Attempting to check in room', id);
     try {
-      const res = await fetch(`http://localhost:5000/api/rooms/checkin/${id}`, {
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/checkin/${id}`, {
   method: 'PUT',
   headers: { 'Content-Type': 'application/json' },
 });

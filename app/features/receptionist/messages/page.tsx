@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
-import Head from 'next/head'; // Import Head from next/head
+// Removed: import Head from 'next/head'; // Head is not needed for global font loading
 
 // Define the type for a single message
 interface Message {
@@ -11,7 +11,7 @@ interface Message {
 }
 
 // Main ChatApp component
-function App() { // Renamed from Message to App for consistency
+function Message() {
   // State to hold all messages in the chat
   const [messages, setMessages] = useState<Message[]>([]);
   // State to hold the current input text
@@ -69,36 +69,15 @@ function App() { // Renamed from Message to App for consistency
   // Handles deleting a message by its ID
   const handleDeleteMessage = (id: string) => {
     setMessages((prevMessages) => prevMessages.filter((msg) => msg.id !== id));
-    console.log('Message deleted successfully!'); // Replaced alert()
+    console.log('Message deleted successfully!');
   };
 
   // --- UI Rendering ---
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 font-inter antialiased">
-      {/* Head component for title and font import - Moved outside the main div */}
-      <Head>
-        <title>Chat App</title>
-        {/* Load Inter font from Google Fonts */}
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        {/* Custom scrollbar styling - Can also be moved to global CSS */}
-        <style jsx global>{`
-          .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #555;
-          }
-        `}</style>
-      </Head>
+    // Removed 'font-inter' class as it should be applied globally in layout.tsx
+    <div className="flex flex-col h-screen bg-gray-100 antialiased">
+      {/* Removed the Head component and all its content related to fonts and global styles */}
 
       {/* Chat Container */}
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full bg-white rounded-lg shadow-xl overflow-hidden my-auto h-[90vh]">
@@ -129,11 +108,10 @@ function App() { // Renamed from Message to App for consistency
                   }`}
                 >
                   <p className="break-words">{message.text}</p>
-                  {/* Timestamp removed as per request */}
                   {/* Delete button for each message - now appears on hover */}
                   <button
                     onClick={() => handleDeleteMessage(message.id)}
-                    className="absolute top-1 right-1 text-red-300 hover:text-red-500 transition-opacity p-1 z-10 opacity-0 group-hover:opacity-100" // Opacity changes on hover
+                    className="absolute top-1 right-1 text-red-300 hover:text-red-500 transition-opacity p-1 z-10 opacity-0 group-hover:opacity-100"
                     title="Delete message"
                   >
                     {/* Trashcan icon */}
@@ -174,4 +152,4 @@ function App() { // Renamed from Message to App for consistency
   );
 }
 
-export default App; 
+export default Message;

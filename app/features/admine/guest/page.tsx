@@ -22,16 +22,20 @@ export default function GuestsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/admin/users");
+      const res = await fetch("https://hms-backend-2k1m.onrender.com/api/auth/admin/users");
       if (!res.ok) throw new Error("Failed to fetch users");
       const data = await res.json();
 
       // ✅ Only guests
       const guestUsers = data.data.filter((u: User) => u.role === "guest");
       setGuests(guestUsers);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+          alert("Checkout failed: " + error.message);
+        } else {
+          alert("Checkout failed: Unknown error");
+        }
+      } finally {
       setLoading(false);
     }
   }
@@ -44,15 +48,19 @@ export default function GuestsPage() {
     if (!confirm("Are you sure you want to delete this guest?")) return;
     setRefreshing(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/admin/users/${id}`, {
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/auth/admin/users/${id}`, {
         method: "DELETE"
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to delete user");
       setGuests(guests.filter(u => u._id !== id));
-    } catch (err: any) {
-      alert(err.message || "Something went wrong");
-    } finally {
+    }catch (error: unknown) {
+        if (error instanceof Error) {
+          alert("Checkout failed: " + error.message);
+        } else {
+          alert("Checkout failed: Unknown error");
+        }
+      } finally {
       setRefreshing(false);
     }
   };

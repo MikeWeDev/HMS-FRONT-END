@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image"; // 1. Import the Image component
 
 export interface Room {
   id: string;
@@ -20,7 +21,6 @@ interface Props {
 
 export default function RoomCard({ room, status }: Props) {
   const router = useRouter();
-  const [imgError, setImgError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const fallbackImage = "https://via.placeholder.com/400x300?text=Room+Image";
@@ -81,14 +81,20 @@ export default function RoomCard({ room, status }: Props) {
     };
   }
 
+  // Get the correct image source, falling back if the primary image URL is not a valid string
+  const imgSrc = typeof room.image === 'string' && room.image.length > 0 ? room.image : fallbackImage;
+
   return (
     <div className="border rounded-2xl shadow-md p-4 max-w-md bg-white">
-      <img
-        src={imgError ? fallbackImage : room.image}
-        alt={room.name}
-        onError={() => setImgError(true)}
-        className="rounded-xl h-48 w-full object-cover mb-3"
-      />
+      <div className="relative h-48 w-full mb-3">
+        <Image
+          src={imgSrc}
+          alt={room.name}
+          layout="fill" // Use fill to make the image size flexible
+          objectFit="cover" // Cover the parent container
+          className="rounded-xl"
+        />
+      </div>
       <h2 className="text-xl font-semibold">{room.name}</h2>
       <p className="text-sm text-gray-500 mb-2">{room.description}</p>
 

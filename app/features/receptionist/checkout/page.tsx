@@ -32,7 +32,7 @@ const CheckoutPage = () => {
 
   const handleCheckout = async (roomId: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/checkout/${roomId}`, {
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/checkout/${roomId}`, {
         method: 'POST',
       });
 

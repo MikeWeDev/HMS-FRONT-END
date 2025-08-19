@@ -68,7 +68,7 @@ export default function BookingForm({ maxGuests, roomId, roomPrice }: BookingFor
     try {
       const token = localStorage.getItem("token"); // Optional JWT
 
-      const res = await fetch("http://localhost:5000/api/bookings", {
+      const res = await fetch("https://hms-backend-2k1m.onrender.com/api/bookings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,9 +92,13 @@ export default function BookingForm({ maxGuests, roomId, roomPrice }: BookingFor
       }
 
       router.push("/features/guest/my-bookings?success=1");
-    } catch (err: any) {
-      setError(err.message);
-    }
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+          alert("Checkout failed: " + error.message);
+        } else {
+          alert("Checkout failed: Unknown error");
+        }
+      }
   }
 
   return (
