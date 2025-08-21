@@ -52,7 +52,7 @@ export default function AdmineistSidebar() {
             EDIT ROOM
           </Link>
           <Link
-            href="/features/admine"
+            href="/features/admine/message"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <MessageCircle className="w-4 h-4 text-green-600" />
