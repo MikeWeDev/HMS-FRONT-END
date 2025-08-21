@@ -46,7 +46,7 @@ export default function ReceptionistSidebar() {
             CHECK OUT
           </Link>
           <Link
-            href="/features/receptionist/booking"
+            href="/features/receptionist/roomList"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <CalendarDays className="w-4 h-4 text-green-600" />
