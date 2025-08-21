@@ -5,7 +5,6 @@ import Link from 'next/link'; // Import Link for navigation
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200  antialiased p-8">
-        <h1>Hotel Management System</h1>
 
       <div className="bg-white rounded-xl shadow-2xl p-10 max-w-lg w-full text-center space-y-8 transform transition-all duration-300 hover:scale-105">
         <h1 className="text-5xl font-extrabold text-gray-800 mb-4">

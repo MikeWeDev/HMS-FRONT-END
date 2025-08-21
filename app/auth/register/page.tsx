@@ -99,6 +99,8 @@ export default function RegisterPage() {
               <option value="">Select role</option>
               <option value="guest">guest</option>
               <option value="receptionist">receptionist</option>
+              <option value="admin">Admine</option>
+
             </select>
           </div>
           <div>
