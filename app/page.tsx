@@ -55,7 +55,7 @@ export default function Home() {
           </Link>
 
           {/* Admin Portal Button */}
-          <Link href="/features/admin" passHref>
+          <Link href="/features/admine" passHref>
             <button className="w-full bg-red-600 text-white py-4 px-6 rounded-lg text-xl font-bold shadow-md hover:bg-red-700 transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg">
               Admin Dashboard
             </button>
