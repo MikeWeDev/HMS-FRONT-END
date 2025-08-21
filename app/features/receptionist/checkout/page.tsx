@@ -1,6 +1,19 @@
 'use client'
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+interface Room {
+  _id: string;
+  roomNumber: string;
+  name: string;
+  type: string;
+  description: string;
+  price: number;
+  capacity: number;
+  status: 'Available' | 'Booked' | 'Checked-In' | 'Checked-Out';
+  isAvailable: boolean;
+  image: string;
+}
+
 
 const CheckoutPage = () => {
   const [checkedInRooms, setCheckedInRooms] = useState<Room[]>([]);
