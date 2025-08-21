@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
-  const [username, setUsername] = useState(''); // changed from email to username
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState(''); // new state for role
+  const [role, setRole] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // new state
   const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -18,13 +19,14 @@ export default function RegisterPage() {
       return;
     }
 
+    setLoading(true);
+    setMessage('');
+
     try {
       const response = await fetch('https://hms-backend-2k1m.onrender.com/api/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password, role }), // send role
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, role }),
       });
 
       const data = await response.json();
@@ -43,6 +45,8 @@ export default function RegisterPage() {
     } catch (error) {
       setMessage('An unexpected error occurred. Please try again later.');
       console.error('Frontend registration error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,16 +103,18 @@ export default function RegisterPage() {
               <option value="">Select role</option>
               <option value="guest">guest</option>
               <option value="receptionist">receptionist</option>
-              <option value="admin">Admine</option>
-
+              <option value="admin">admin</option>
             </select>
           </div>
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              disabled={loading}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white 
+                ${loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'} 
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out`}
             >
-              Register
+              {loading ? 'Registering...' : 'Register'}
             </button>
           </div>
         </form>
@@ -118,7 +124,7 @@ export default function RegisterPage() {
           </p>
         )}
         <div className="text-center text-sm">
-          <a href="/auth//login" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <a href="/auth/login" className="font-medium text-indigo-600 hover:text-indigo-500">
             Already have an account? Sign in
           </a>
         </div>

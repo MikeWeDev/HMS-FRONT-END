@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link'
+import Link from 'next/link';
+
 export default function LoginPage() {
   const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // new state for button
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -17,11 +19,14 @@ export default function LoginPage() {
       return;
     }
 
+    setLoading(true); // disable button
+    setMessage('');
+
     try {
       const response = await fetch('https://hms-backend-2k1m.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }), // backend expects identifier
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
@@ -29,12 +34,15 @@ export default function LoginPage() {
       if (response.ok) {
         setMessage(data.message || 'Login successful!');
 
-        // Redirect based on role
+        // Redirect based on role after short delay
         setTimeout(() => {
           if (data.role === 'guest') {
             router.push('/features/guest');
           } else if (data.role === 'receptionist') {
             router.push('/features/receptionist');
+          },
+           else if (data.role === 'admin') {
+            router.push('/features/admine');
           }
         }, 1000);
 
@@ -44,6 +52,8 @@ export default function LoginPage() {
     } catch (error) {
       setMessage('An unexpected error occurred. Please try again later.');
       console.error('Frontend login error:', error);
+    } finally {
+      setLoading(false); // re-enable button
     }
   };
 
@@ -87,9 +97,12 @@ export default function LoginPage() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              disabled={loading} // disable button while logging in
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white 
+                ${loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'} 
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out`}
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </div>
         </form>
@@ -97,15 +110,13 @@ export default function LoginPage() {
           <p className="mt-4 text-center text-sm font-medium text-gray-700">
             {message}
           </p>
-        )
-        }
-           <Link href="/auth/register" >
-           <p className="font-medium text-indigo-600 hover:text-indigo-500 text-center">
-Don&apos;t have an account?          </p>
-          </Link>     
-           </div>
+        )}
+        <Link href="/auth/register">
+          <p className="font-medium text-indigo-600 hover:text-indigo-500 text-center">
+            Don&apos;t have an account?
+          </p>
+        </Link>     
+      </div>
     </div>
   );
 }
-
-
