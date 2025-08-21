@@ -35,16 +35,16 @@ export default function LoginPage() {
         setMessage(data.message || 'Login successful!');
 
         // Redirect based on role after short delay
-        setTimeout(() => {
-          if (data.role === 'guest') {
-            router.push('/features/guest');
-          } else if (data.role === 'receptionist') {
-            router.push('/features/receptionist');
-          },
-           else if (data.role === 'admin') {
-            router.push('/features/admine');
-          }
-        }, 1000);
+       setTimeout(() => {
+  if (data.role === 'guest') {
+    router.push('/features/guest');
+  } else if (data.role === 'receptionist') {
+    router.push('/features/receptionist');
+  } else if (data.role === 'admin') {
+    router.push('/features/admin'); // corrected spelling from 'admine' if needed
+  }
+}, 1000);
+
 
       } else {
         setMessage(data.message || 'Login failed. Please try again.');
