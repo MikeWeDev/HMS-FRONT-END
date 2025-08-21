@@ -41,7 +41,7 @@ export default function LoginPage() {
   } else if (data.role === 'receptionist') {
     router.push('/features/receptionist');
   } else if (data.role === 'admin') {
-    router.push('/features/admin'); // corrected spelling from 'admine' if needed
+    router.push('/features/admine'); // corrected spelling from 'admine' if needed
   }
 }, 1000);
 
