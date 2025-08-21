@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Room } from '../../../types/index';
 
 const CheckoutPage = () => {
   const [checkedInRooms, setCheckedInRooms] = useState<Room[]>([]);
