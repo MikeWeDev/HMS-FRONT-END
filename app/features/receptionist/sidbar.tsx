@@ -53,7 +53,7 @@ export default function ReceptionistSidebar() {
             ROOM LIST
           </Link>
           <Link
-            href="/receptionist/messages"
+            href="/features/receptionist/messages"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <MessageCircle className="w-4 h-4 text-green-600" />
