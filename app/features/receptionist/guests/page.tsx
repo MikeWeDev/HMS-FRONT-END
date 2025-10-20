@@ -14,6 +14,8 @@ export interface RawRoom {
   amenities: string[];
   isAvailable: boolean;
   status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+ image ?: string;
+
 }
 
 // Define the final interface that includes the derived fields
@@ -48,7 +50,7 @@ export default function BOOKEDGUST() {
             id: room._id,
             name: `Room ${room.roomNumber}`,
             description: `Type: ${room.type} • Capacity: ${room.capacity}`,
-            image: "/room-placeholder.jpg",
+          image: room.image || `/room-${room.roomNumber}.jpg`, 
           }));
 
         setBookedRooms(filtered);

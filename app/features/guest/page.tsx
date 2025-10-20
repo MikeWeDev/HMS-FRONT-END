@@ -1,3 +1,5 @@
+// app/guest/dashboard/page.tsx or similar
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,12 +16,12 @@ export interface Room {
   amenities: string[];
   isAvailable: boolean;
   status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+  image: string;
 
   // Fields expected by RoomCard
   id: string;         // Alias of _id
   name: string;       // e.g., "Room 101"
   description: string; // e.g., "Type: Deluxe • Capacity: 2"
-  image: string;      // e.g., placeholder path
 }
 
 // Define the interface for the raw data from the API
@@ -33,6 +35,8 @@ export interface RawRoom {
     isAvailable: boolean;
     // status and other fields might not exist in the raw data
     status?: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+   image?: string;
+
 }
 
 export default function GuestDashboardPage() {
@@ -48,27 +52,34 @@ useEffect(() => {
         throw new Error("Failed to fetch rooms");
       }
 
-       const data: RawRoom[] = await res.json();  
+      const data: RawRoom[] = await res.json(); 	
       // Filter only available rooms
- const availableRooms = data.filter((room) => room.isAvailable === true);
-     const roomsWithStatus: Room[] = availableRooms.map((room) => ({
+      const availableRooms = data.filter((room) => room.isAvailable === true);
+      
+      // 💡 NEW LOGIC: Map and assign a rotating image path
+      const IMAGE_COUNT = 20; // You have 20 images: room-1.jpg to room-20.jpg
+
+      const roomsWithStatus: Room[] = availableRooms.map((room, index) => {
+    
+
+        return {
           ...room,
           id: room._id, // Add id field for RoomCard
           status: "Available", // Since filtered only available
           name: `Room ${room.roomNumber}`,
           description: `Type: ${room.type} • Capacity: ${room.capacity}`,
-          image: "/room-placeholder.jpg", // Replace with real image if available
-        }));
+          // Use the backend image if it exists, otherwise use the generated path
+          image: room.image || `/room-${room.roomNumber}.jpg`, 
+        };
+      });
 
-        setRooms(roomsWithStatus);
+      setRooms(roomsWithStatus);
     } catch (err: unknown) {
-  if (err instanceof Error) {
-    // TypeScript now knows 'err' is an Error object
-    setError(err.message);
-  } else {
-    // Handle cases where the error isn't an Error object
-    setError('An unknown error occurred');
-  }
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -102,7 +113,7 @@ useEffect(() => {
         {!loading && rooms.length > 0 && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {rooms.map((room) => (
-              <RoomCard key={room.id} room={room}  status={room.status}/>
+              <RoomCard key={room.id} room={room}  status={room.status}/>
             ))}
           </div>
         )}

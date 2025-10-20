@@ -14,6 +14,7 @@ interface RawRoomApiData {
   amenities: string[];
   isAvailable: boolean;
   status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+  image?:string;
 }
 
 // Your existing Room interface remains the same
@@ -56,7 +57,7 @@ export default function ReceptionistDashboardPage() {
           id: room._id,
           name: `Room ${room.roomNumber}`,
           description: `Type: ${room.type} • Capacity: ${room.capacity}`,
-          image: "/room-placeholder.jpg",
+          image: room.image || `/room-${room.roomNumber}.jpg`, 
           status,
         };
         

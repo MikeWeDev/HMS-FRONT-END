@@ -13,12 +13,12 @@ import {
 
 export default function AdmineistSidebar() {
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between sticky top-0 h-screen overflow-y-auto">
+    <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between h-screen overflow-y-auto">
       <div>
         {/* Logo */}
         <div className="text-2xl font-bold text-primary flex items-center gap-2 mb-10">
           <Building2 className="w-6 h-6 text-green-600" />
-          <span className="text-gray-800">Royal Stay Reception</span>
+          <span className="text-gray-800">Royal Stay Admin</span>
         </div>
 
         {/* Navigation */}
@@ -29,28 +29,32 @@ export default function AdmineistSidebar() {
           >
             <LayoutDashboard className="w-4 h-4 text-green-600" />
             Dashboard
-          </Link>   
+          </Link>
+
           <Link
             href="/features/admine/guest"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <User className="w-4 h-4 text-green-600" />
-            ALL GUST
+            All Guests
           </Link>
+
           <Link
             href="/features/admine/stough"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <ClipboardList className="w-4 h-4 text-green-600" />
-            ALL STOUGH
+            All Staff
           </Link>
+
           <Link
             href="/features/admine/rooms"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <CalendarDays className="w-4 h-4 text-green-600" />
-            EDIT ROOM
+            Edit Rooms
           </Link>
+
           <Link
             href="/features/admine/message"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
@@ -58,17 +62,16 @@ export default function AdmineistSidebar() {
             <MessageCircle className="w-4 h-4 text-green-600" />
             Messages
           </Link>
-      <Link
+
+          <Link
             href="/auth/login"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
+            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-red-50 transition"
           >
-            <LogOut className="w-4 h-4 text-green-600" />
+            <LogOut className="w-4 h-4 text-red-500" />
             Logout
           </Link>
         </nav>
       </div>
-
-   
     </aside>
   );
 }

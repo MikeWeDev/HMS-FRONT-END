@@ -12,9 +12,16 @@ import {
   LogOut,
 } from "lucide-react";
 
-export default function ReceptionistSidebar() {
+interface ReceptionistSidebarProps {
+  isMobile?: boolean;
+}
+
+export default function ReceptionistSidebar({ isMobile = false }: ReceptionistSidebarProps) {
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between sticky top-0 h-screen overflow-y-auto">
+    <aside
+      className={`${isMobile ? "flex" : "hidden md:flex"} 
+      w-64 bg-white border-r border-gray-200 p-6 flex-col justify-between sticky top-0 h-screen overflow-y-auto`}
+    >
       <div>
         {/* Logo */}
         <div className="text-2xl font-bold text-primary flex items-center gap-2 mb-10">
@@ -30,28 +37,32 @@ export default function ReceptionistSidebar() {
           >
             <LayoutDashboard className="w-4 h-4 text-green-600" />
             Dashboard
-          </Link>   
+          </Link>
+
           <Link
             href="/features/receptionist/guests"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <User className="w-4 h-4 text-green-600" />
-            CHECK IN
+            Check In
           </Link>
+
           <Link
             href="/features/receptionist/checkout"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <ClipboardList className="w-4 h-4 text-green-600" />
-            CHECK OUT
+            Check Out
           </Link>
+
           <Link
             href="/features/receptionist/roomList"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
           >
             <CalendarDays className="w-4 h-4 text-green-600" />
-            ROOM LIST
+            Room List
           </Link>
+
           <Link
             href="/features/receptionist/messages"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
@@ -59,6 +70,7 @@ export default function ReceptionistSidebar() {
             <MessageCircle className="w-4 h-4 text-green-600" />
             Messages
           </Link>
+
           <Link
             href="/features/receptionist/settings"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
@@ -70,10 +82,10 @@ export default function ReceptionistSidebar() {
       </div>
 
       {/* Logout */}
-      <button className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 transition">
+      <Link href="/auth/login" className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 transition">
         <LogOut className="w-4 h-4" />
         Logout
-      </button>
+      </Link>
     </aside>
   );
 }
