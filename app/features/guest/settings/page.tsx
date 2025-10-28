@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon, Bell, Key, Settings as SettingsIcon, Info } from 'lucide-react';
+import {Bell, Key, Settings as SettingsIcon, Info } from 'lucide-react';
 import Link from "next/link";
 
 
@@ -110,7 +110,6 @@ const ReceptionistSettingsPage = () => {
     // };
     // =========================================================
 
-    const isDarkMode = settings.theme === 'dark';
 
     return (
         // Main container and background

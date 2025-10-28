@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { User as UserIcon, Mail, Phone, Loader2, Save, AlertTriangle, ArrowLeft,Edit3 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // For redirection
 
 // --- INTERFACES (Re-used/Modified) ---
 interface GuestProfile {
@@ -24,7 +23,6 @@ interface EditProfileForm {
 // --- COMPONENT ---
 
 const EditGuestProfilePage = () => {
-    const router = useRouter();
     const [formData, setFormData] = useState<EditProfileForm>({ name: '', email: '', phone: '' });
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
