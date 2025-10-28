@@ -23,7 +23,7 @@ export default function GuestLayout({ children }: { children: React.ReactNode })
           className="p-2 rounded-md hover:bg-gray-100 transition"
           aria-label="Toggle menu"
         >
-          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 text-black" />}
         </button>
       </header>
 
