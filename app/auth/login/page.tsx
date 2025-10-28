@@ -8,54 +8,62 @@ export default function LoginPage() {
   const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false); // new state for button
+  const [loading, setLoading] = useState(false); // new state for buttoN
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-    if (!username || !password) {
-      setMessage('Please enter both username and password.');
-      return;
-    }
+        if (!username || !password) {
+            setMessage('Please enter both username and password.');
+            return;
+        }
 
-    setLoading(true); // disable button
-    setMessage('');
+        setLoading(true); 
+        setMessage('');
 
-    try {
-      const response = await fetch('https://hms-backend-2k1m.onrender.com/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
+        try {
+            const response = await fetch('https://hms-backend-2k1m.onrender.com/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
 
-      const data = await response.json();
+            const data = await response.json();
 
-      if (response.ok) {
-        setMessage(data.message || 'Login successful!');
+            if (response.ok) {
+                // 🔑 CRITICAL CHANGE: Check for and save the token
+                if (data.userId) {
+                    localStorage.setItem('userId', data.userId); // Save the JWT
+                    // Optionally save other info, e.g., localStorage.setItem('userRole', data.role);
+                }
+                
+                setMessage(data.message || 'Login successful!');
 
-        // Redirect based on role after short delay
-       setTimeout(() => {
-  if (data.role === 'guest') {
-    router.push('/features/guest');
-  } else if (data.role === 'receptionist') {
-    router.push('/features/receptionist');
-  } else if (data.role === 'admin') {
-    router.push('/features/admine'); // corrected spelling from 'admine' if needed
-  }
-}, 1000);
+                // Redirect based on role after short delay
+                setTimeout(() => {
+                    if (data.role === 'guest') {
+                        router.push('/features/guest');
+                    } else if (data.role === 'receptionist') {
+                        router.push('/features/receptionist');
+                    } else if (data.role === 'admin') {
+                        router.push('/features/admin'); // Corrected 'admine' to 'admin'
+                    }
+                }, 1000);
 
-
-      } else {
-        setMessage(data.message || 'Login failed. Please try again.');
-      }
-    } catch (error) {
-      setMessage('An unexpected error occurred. Please try again later.');
-      console.error('Frontend login error:', error);
-    } finally {
-      setLoading(false); // re-enable button
-    }
-  };
+            } else {
+                // If login failed, clear any old token just in case
+                localStorage.removeItem('userToken');
+                setMessage(data.message || 'Login failed. Please try again.');
+            }
+        } catch (error) {
+            setMessage('An unexpected error occurred. Please try again later.');
+            console.error('Frontend login error:', error);
+            localStorage.removeItem('userToken'); // Clean up on network/unexpected error
+        } finally {
+            setLoading(false);
+        }
+    };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 p-4">

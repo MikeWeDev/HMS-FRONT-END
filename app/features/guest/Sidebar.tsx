@@ -12,61 +12,90 @@ import {
   LogOut,
 } from "lucide-react";
 
-interface GustSidebarProps {
+interface GuestSidebarProps {
   isMobile?: boolean;
+  active?: string; // Optional active route
+  notifications?: { [key: string]: number };
+  // NEW PROP: Function to close the sidebar after a link is clicked
+  onLinkClick: () => void; 
 }
 
-export default function GustSidebar({ isMobile = false }: GustSidebarProps) {
+export default function GuestSidebar({ 
+    isMobile = false, 
+    active, 
+    notifications = {}, 
+    onLinkClick 
+}: GuestSidebarProps) {
+  const links = [
+    { href: "/features/guest", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/features/guest/my-bookings", label: "My Bookings", icon: CalendarDays },
+    { href: "/features/guest/profile", label: "Profile", icon: User },
+    { href: "/features/guest/payment-history", label: "Payment History", icon: CreditCard },
+    { href: "/features/guest/contact-support", label: "Contact Support", icon: Phone },
+    { href: "/features/guest/settings", label: "Settings", icon: Settings },
+  ];
+
   return (
     <aside
-      className={`${isMobile ? "flex " : "hidden md:flex"} 
-      w-64 bg-white border-r border-gray-200 p-6 flex-col justify-between sticky top-0 h-screen overflow-y-auto`}>
-      <div>
-        {/* Logo */}
-        <div className="text-2xl font-bold text-primary flex items-center gap-2 mb-10">
-          <Building2 className="w-6 h-6 text-blue-600" />
-          <span className="text-gray-800">Royal Stay Hotel</span>
+      className={`${isMobile ? "fixed inset-y-0 left-0 z-50 flex" : "hidden md:flex"} 
+        w-80 bg-gray-50 p-6 flex-col justify-between h-full shadow-2xl dark:bg-gray-900`}
+      // Note: Changed `sticky top-0 h-screen` to `fixed inset-y-0 left-0 z-50 h-full` 
+      // for better mobile overlay behavior.
+    >
+      {/* Top Profile Card */}
+      <div className="mb-10">
+        <div className="flex items-center gap-4 bg-white rounded-2xl p-4 ">
+          <Building2 className="w-10 h-10 text-blue-600" />
+          <div>
+            <h1 className="text-lg font-semibold text-gray-900">Royal Stay Hotel</h1>
+            <p className="text-sm text-gray-500">Guest Dashboard</p>
+          </div>
         </div>
-
-        {/* Navigation */}
-        <nav className="flex flex-col gap-4 text-sm font-medium">
-          <Link href="/features/guest" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition">
-            <LayoutDashboard className="w-4 h-4 text-blue-600" />
-            Dashboard
-          </Link>
-
-          <Link href="/features/guest/my-bookings" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition">
-            <CalendarDays className="w-4 h-4 text-blue-600" />
-            My Bookings
-          </Link>
-
-          <Link href="/features/guest/profile" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition">
-            <User className="w-4 h-4 text-blue-600" />
-            Profile
-          </Link>
-
-          <Link href="/features/guest/payment-history" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition">
-            <CreditCard className="w-4 h-4 text-blue-600" />
-            Payment History
-          </Link>
-
-          <Link href="/features/guest/contact-support" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition">
-            <Phone className="w-4 h-4 text-blue-600" />
-            Contact Support
-          </Link>
-
-          <Link href="/features/guest/settings" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-blue-50 transition">
-            <Settings className="w-4 h-4 text-blue-600" />
-            Settings
-          </Link>
-        </nav>
       </div>
 
-      {/* Logout */}
-      <Link href="/auth/login" className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 transition">
-        <LogOut className="w-4 h-4" />
-        Logout
-      </Link>
+      {/* Navigation */}
+      <nav className="flex flex-col gap-4">
+        {links.map((link) => {
+          const Icon = link.icon;
+          const isActive = active === link.href;
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={onLinkClick}
+              className={`
+                relative flex items-center gap-4 px-5 py-3 rounded-2xl font-medium text-gray-700 transition-all
+                ${isActive ? "bg-blue-600 text-white shadow-lg" : "bg-white hover:bg-blue-50 hover:scale-[1.03] shadow-md"}
+              `}
+            >
+              {/* Active bar */}
+              {isActive && <span className="absolute left-0 top-0 h-full w-1 bg-white rounded-r-xl"></span>}
+
+              <Icon className={`w-6 h-6 transition-colors ${isActive ? "text-white" : "text-blue-600"}`} />
+              <span>{link.label}</span>
+
+              {/* Optional badge */}
+              {notifications[link.label] && (
+                <span className="ml-auto bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full animate-pulse">
+                  {notifications[link.label]}
+                </span>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Logout Card */}
+      <div className="mt-10">
+        <Link
+          href="/auth/login"
+          onClick={onLinkClick} 
+          className="flex items-center gap-4 px-5 py-3 rounded-2xl font-medium text-red-500 bg-white shadow-md hover:bg-red-50 hover:text-red-600 hover:scale-[1.03] transition"
+        >
+          <LogOut className="w-6 h-6" />
+          Logout
+        </Link>
+      </div>
     </aside>
   );
 }

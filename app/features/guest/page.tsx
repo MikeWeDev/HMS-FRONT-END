@@ -1,10 +1,24 @@
-// app/guest/dashboard/page.tsx or similar
-
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, ChangeEvent } from "react";
 import RoomCard from "../../components/RoomCard";
-import { BedDouble, Loader2 } from "lucide-react";
+import { BedDouble, Loader2 ,Filter} from "lucide-react";
+
+// --- Price Range Definitions ---
+interface PriceRange {
+  label: string;
+  min: number;
+  max: number;
+}
+
+// Define the price ranges as requested (adjusted 2090 to 300 for logical steps)
+const PRICE_RANGES: PriceRange[] = [
+  { label: "$0 - $100", min: 0, max: 100 },
+  { label: "$100 - $200", min: 100, max: 200 },
+  { label: "$200 - $300", min: 200, max: 300 }, // Changed 2090 to 300
+  { label: "$300+", min: 300, max: Infinity }, // Use Infinity for the open-ended range
+];
+// --- End Price Range Definitions ---
 
 // Room interface extended to match RoomCard expected props
 export interface Room {
@@ -19,8 +33,8 @@ export interface Room {
   image: string;
 
   // Fields expected by RoomCard
-  id: string;         // Alias of _id
-  name: string;       // e.g., "Room 101"
+  id: string; // Alias of _id
+  name: string; // e.g., "Room 101"
   description: string; // e.g., "Type: Deluxe • Capacity: 2"
 }
 
@@ -33,60 +47,87 @@ export interface RawRoom {
     capacity: number;
     amenities: string[];
     isAvailable: boolean;
-    // status and other fields might not exist in the raw data
     status?: "Available" | "Booked" | "Checked-In" | "Checked-Out";
-   image?: string;
-
+    image?: string;
 }
 
 export default function GuestDashboardPage() {
-  const [rooms, setRooms] = useState<Room[]>([]);
+  // Renamed for clarity: store all fetched rooms here
+  const [allRooms, setAllRooms] = useState<Room[]>([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // STATE: Stores the label of the currently selected filter range.
+  // Using 'All' as the default value to represent no filter.
+  const [selectedRangeLabel, setSelectedRangeLabel] = useState<string | 'All'>('All');
 
-useEffect(() => {
-  async function fetchRooms() {
-    try {
-      const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
-      if (!res.ok) {
-        throw new Error("Failed to fetch rooms");
+
+  useEffect(() => {
+    async function fetchRooms() {
+      try {
+        const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
+        if (!res.ok) {
+          throw new Error("Failed to fetch rooms");
+        }
+
+        const data: RawRoom[] = await res.json(); 
+        const availableRooms = data.filter((room) => room.isAvailable === true);
+        
+        const roomsWithStatus: Room[] = availableRooms.map((room) => {
+          return {
+            ...room,
+            id: room._id, 
+            status: "Available", 
+            name: `Room ${room.roomNumber}`,
+            description: `Type: ${room.type} • Capacity: ${room.capacity}`,
+            image: `/room-${room.roomNumber}.jpg`, 
+          };
+        });
+
+        // Store the complete, mapped list
+        setAllRooms(roomsWithStatus);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+      } finally {
+        setLoading(false);
       }
-
-      const data: RawRoom[] = await res.json(); 	
-      // Filter only available rooms
-      const availableRooms = data.filter((room) => room.isAvailable === true);
-      
-      // 💡 NEW LOGIC: Map and assign a rotating image path
-      const IMAGE_COUNT = 20; // You have 20 images: room-1.jpg to room-20.jpg
-
-      const roomsWithStatus: Room[] = availableRooms.map((room, index) => {
-    
-
-        return {
-          ...room,
-          id: room._id, // Add id field for RoomCard
-          status: "Available", // Since filtered only available
-          name: `Room ${room.roomNumber}`,
-          description: `Type: ${room.type} • Capacity: ${room.capacity}`,
-          // Use the backend image if it exists, otherwise use the generated path
-          image: room.image || `/room-${room.roomNumber}.jpg`, 
-        };
-      });
-
-      setRooms(roomsWithStatus);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred');
-      }
-    } finally {
-      setLoading(false);
     }
-  }
 
-  fetchRooms();
-}, []);
+    fetchRooms();
+  }, []);
+
+  
+  // LOGIC: Filter the rooms based on the selected price range
+  const filteredRooms = useMemo(() => {
+    // If 'All' is selected, return all rooms
+    if (selectedRangeLabel === 'All') {
+      return allRooms;
+    }
+
+    const activeRange = PRICE_RANGES.find(
+      (range) => range.label === selectedRangeLabel
+    );
+
+    // Should not happen if dropdown options are correctly set
+    if (!activeRange) {
+      return allRooms; 
+    }
+
+    const { min, max } = activeRange;
+
+    // Filter rooms where price is >= min AND < max
+    return allRooms.filter((room) => room.price >= min && room.price < max);
+  }, [allRooms, selectedRangeLabel]);
+
+
+  // Handler for the dropdown change event
+  const handleDropdownChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedRangeLabel(event.target.value);
+  };
 
 
   return (
@@ -96,6 +137,53 @@ useEffect(() => {
           <BedDouble className="w-6 h-6 text-blue-600" />
           <h2 className="text-2xl font-semibold">Available Rooms</h2>
         </div>
+        
+        {/* --- PRICE FILTER SECTION (Dropdown) --- */}
+       <div className="mb-10 p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+        <Filter className="w-5 h-5 text-blue-600" />
+        Price Filter
+      </h3>
+    </div>
+    
+    <div className="relative w-full sm:w-72"> {/* Increased width for clarity */}
+
+     <select
+  value={selectedRangeLabel}
+  onChange={handleDropdownChange}
+  // ENHANCED STYLING:
+  className="appearance-none block w-full bg-white text-gray-800 border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 px-5 py-3 pr-10 rounded-xl leading-tight shadow-sm transition duration-200 ease-in-out cursor-pointer text-base font-medium"
+>
+  {/* Default 'All Rooms' option */}
+  <option value="All" className="text-gray-700">
+    All Rooms
+  </option>
+  
+  {/* Price Range Options - NO <optgroup> needed for continuous flow */}
+  {PRICE_RANGES.map((range) => (
+    <option 
+      key={range.label} 
+      value={range.label} 
+      // Note: The 'py-1' class inside <option> often has no effect 
+      // in standard browsers, but we leave it for consistency.
+      className="text-gray-700 py-1" 
+    >
+      {range.label}
+    </option>
+  ))}
+</select>
+      
+      {/* Custom Arrow Icon (Now a ChevronDown) */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+        <svg className="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+        {/* --- END PRICE FILTER SECTION --- */}
+
 
         {loading && (
           <div className="flex items-center gap-2 text-gray-600">
@@ -106,14 +194,20 @@ useEffect(() => {
 
         {error && <div className="text-red-600">{error}</div>}
 
-        {!loading && rooms.length === 0 && (
-          <div className="text-gray-600">No rooms available right now.</div>
+        {!loading && filteredRooms.length === 0 && (
+          <div className="text-gray-600">
+            {selectedRangeLabel !== 'All' 
+              ? `No rooms found in the price range: ${selectedRangeLabel}.`
+              : "No rooms available right now."
+            }
+          </div>
         )}
 
-        {!loading && rooms.length > 0 && (
+        {/* Display filteredRooms */}
+        {!loading && filteredRooms.length > 0 && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {rooms.map((room) => (
-              <RoomCard key={room.id} room={room}  status={room.status}/>
+            {filteredRooms.map((room) => (
+              <RoomCard key={room.id} room={room} status={room.status}/>
             ))}
           </div>
         )}

@@ -1,12 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import GustSidebar from "./Sidebar";
+import GustSidebar from "./Sidebar"; // Assuming this is the GuestSidebar component
 import { Menu, X } from "lucide-react";
 
 export default function GuestLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Function to close the sidebar. This will be passed to the links.
+  const closeSidebar = () => setIsSidebarOpen(false); 
+
+  // Function to toggle the sidebar (used by the hamburger button and the overlay).
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
@@ -24,22 +28,28 @@ export default function GuestLayout({ children }: { children: React.ReactNode })
       </header>
 
       {/* --- Sidebar (Desktop) --- */}
+      {/* Note: The desktop version doesn't need the close function because it's always visible. 
+          However, GuestSidebar requires the prop, so we pass a placeholder function here. */}
       <div className="hidden md:block">
-        <GustSidebar />
+        <GustSidebar onLinkClick={() => {}} /> 
       </div>
 
       {/* --- Sidebar Drawer (Mobile) --- */}
       {isSidebarOpen && (
         <div className="fixed inset-0 z-40 flex">
-          {/* Overlay */}
+          {/* Overlay - Clicks outside the sidebar close it */}
           <div
-            onClick={toggleSidebar}
+            onClick={closeSidebar} // Use closeSidebar here
             className="fixed inset-0 bg-black bg-opacity-40 transition-opacity"
           ></div>
 
           {/* Drawer */}
           <div className="relative bg-white w-64 h-full shadow-lg z-50 animate-slide-in">
-            <GustSidebar isMobile />
+            {/* 💡 THE FIX: PASS closeSidebar AS onLinkClick PROP */}
+            <GustSidebar 
+              isMobile 
+              onLinkClick={closeSidebar} 
+            />
           </div>
         </div>
       )}
@@ -47,7 +57,7 @@ export default function GuestLayout({ children }: { children: React.ReactNode })
       {/* --- Main Content --- */}
       <main className="flex-1 bg-gray-50">{children}</main>
 
-      {/* --- Animation Styles --- */}
+      {/* --- Animation Styles (Keeping for completeness) --- */}
       <style jsx>{`
         @keyframes slide-in {
           from {
