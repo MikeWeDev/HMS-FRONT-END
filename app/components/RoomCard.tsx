@@ -31,12 +31,14 @@ export default function RoomCard({ room, status }: Props) {
   const normalizedStatus = status.toLowerCase();
 
   // Status dot color
-  const statusColor =
-    normalizedStatus === "available"
-      ? "bg-green-500"
-      : normalizedStatus === "booked"
-      ? "bg-yellow-500"
-      : "bg-gray-400";
+ const statusColor =
+    normalizedStatus === "available"
+      ? "bg-green-500"
+      : normalizedStatus === "booked"
+      ? "bg-yellow-500"
+      : normalizedStatus === "checked-in"
+      ? "bg-red-500" 
+      : "bg-gray-400";
 
   // Button logic
   let buttonLabel = "";
@@ -68,21 +70,11 @@ export default function RoomCard({ room, status }: Props) {
   } else if (normalizedStatus === "checked-in") {
     // Async API call action
     buttonLabel = "Check Out";
-    onClickHandler = async () => {
-      setActionLoading(true);
-      try {
-        const res = await fetch(`/api/rooms/checkout/${room.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!res.ok) throw new Error("Failed to check out");
-        router.refresh(); // This will trigger a re-fetch and re-render of the parent
-      } catch (error: unknown) {
-        if (error instanceof Error) alert("Checkout failed: " + error.message);
-        else alert("Checkout failed: Unknown error");
-      } finally {
-        setActionLoading(false); // Stop loading if action fails or succeeds locally
-      }
+    onClickHandler = () => {
+      setActionLoading(true); // Start loading immediately
+      router.push(`/features/receptionist/checkout/${room.id}`);
+      // Note: setActionLoading(false) isn't strictly needed here 
+      // because navigation will unmount the component.
     };
     buttonDisabled = actionLoading; // Disable while waiting for API response
   }
@@ -147,12 +139,12 @@ export default function RoomCard({ room, status }: Props) {
       {/* Call to Action */}
       <button
         onClick={onClickHandler}
-        disabled={buttonDisabled || normalizedStatus !== "available"} // Disable button if loading OR if not available
-        className={`mt-auto py-2 rounded-xl font-medium shadow-md transition w-full ${
-          normalizedStatus === "available"
-            ? "bg-blue-600 text-white hover:bg-blue-700"
-            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-        } ${actionLoading ? 'bg-blue-400 cursor-wait' : ''}`}
+      disabled={buttonDisabled || !buttonLabel}     
+     className={`mt-auto py-2 rounded-xl font-medium shadow-md transition w-full ${
+    buttonLabel // <--- Check if any action button label was set (Book, Check In, Check Out)
+        ? "bg-blue-600 text-white hover:bg-blue-700"
+        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+} ${actionLoading ? 'bg-blue-400 cursor-wait' : ''}`}
       >
         {displayButtonContent}
       </button>

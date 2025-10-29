@@ -1,17 +1,20 @@
 'use client'
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Head from 'next/head';
+
+
 interface Room {
-  _id: string;
-  roomNumber: string;
-  name: string;
-  type: string;
-  description: string;
-  price: number;
-  capacity: number;
-  status: 'Available' | 'Booked' | 'Checked-In' | 'Checked-Out';
-  isAvailable: boolean;
-  image: string;
+  _id: string;
+  roomNumber: string;
+  name: string;
+  type: string;
+  description: string;
+  price: number;
+  capacity: number;
+  status: 'Available' | 'Booked' | 'Checked-In' | 'Checked-Out';
+  isAvailable: boolean;
+  image: string;
 }
 
 
@@ -19,6 +22,10 @@ const CheckoutPage = () => {
   const [checkedInRooms, setCheckedInRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Initialize the router
+  const router = useRouter();
+
 
   useEffect(() => {
     const fetchCheckedInRooms = async () => {
@@ -27,9 +34,17 @@ const CheckoutPage = () => {
         if (!res.ok) {
           throw new Error('Failed to fetch checked-in rooms');
         }
-        const data = await res.json();
-        setCheckedInRooms(data);
-      } catch (err: unknown) { // Corrected the typo to 'err: unknown'
+        const data: Room[] = await res.json();
+        
+        // Map over the fetched data to explicitly set the local image path
+        const roomsWithLocalImagePaths = data.map(room => ({
+            ...room,
+            // Explicitly set the path to match the required format
+            image: `/room-${room.roomNumber}.jpg`, 
+        }));
+        
+        setCheckedInRooms(roomsWithLocalImagePaths);
+      } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
         } else {
@@ -42,56 +57,89 @@ const CheckoutPage = () => {
     fetchCheckedInRooms();
   }, []);
 
-  const handleCheckout = async (roomId: string) => {
-    try {
-      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/checkout/${roomId}`, {
-        method: 'POST',
-      });
 
-      if (!res.ok) {
-        throw new Error('Failed to complete checkout');
-      }
-
-      setCheckedInRooms(checkedInRooms.filter(room => room._id !== roomId));
-      alert('Checkout successful!');
-    } catch (err: unknown) { // Added 'err: unknown' to handle the error type
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred during checkout.');
-      }
-    }
+  // Update handleCheckout to redirect to the specific room's checkout page
+  const handleCheckout = (roomId: string) => {
+    router.push(`/features/receptionist/checkout/${roomId}`);
   };
 
-  if (loading) return <div className="text-center mt-8">Loading...</div>;
+
+   if (loading)
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-indigo-500 text-2xl font-light">
+        <svg className="animate-spin -ml-1 mr-3 h-10 w-10 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p className="mt-4">Fetching checkout details...</p>
+      </div>
+    );
   if (error) return <div className="text-center mt-8 text-red-500">{error}</div>;
 
+
   return (
-    <div className="container mx-auto p-4">
-      <Head>
-        <title>Checkout | Hotel Management</title>
-      </Head>
-      <h1 className="text-3xl font-bold mb-6">Checked-In Rooms</h1>
-      {checkedInRooms.length === 0 ? (
-        <div className="text-center mt-8 text-gray-500">No rooms are currently checked in.</div>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {checkedInRooms.map((room) => (
-            <div key={room._id} className="bg-white shadow-lg rounded-lg p-6">
-              <h2 className="text-xl font-semibold">Room {room.roomNumber}</h2>
-              <p>Type: {room.type}</p>
-              <p>Price: ${room.price}</p>
-              <button
-                onClick={() => handleCheckout(room._id)}
-                className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
-              >
-                Check-Out
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+   <div className="container mx-auto p-4">
+  <Head>
+    <title>Checkout | Hotel Management</title>
+  </Head>
+  <h1 className="text-3xl font-bold mb-6">Checked-In Rooms</h1>
+
+  {checkedInRooms.length === 0 ? (
+    <div className="text-center mt-8 text-gray-500">
+      No rooms are currently checked in.
+    </div>
+  ) : (
+    <div className="flex flex-wrap -mx-2 items-start">
+      {checkedInRooms.map((room) => (
+        <div
+          key={room._id}
+          className="p-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex"
+        >
+          <div className="bg-white shadow-lg rounded-xl overflow-hidden flex flex-col h-full w-full">
+            
+            {/* 1. Room Image */}
+            <div className="relative h-48 w-full">
+              <img
+                src={room.image}
+                alt={room.name}
+                className="w-full h-full object-cover"
+              />
+              {/* Status badge */}
+              <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                {room.status}
+              </span>
+            </div>
+
+            {/* 2. Room Details */}
+            <div className="p-5 flex flex-col flex-grow">
+              <h2 className="text-xl font-bold text-gray-900 mb-1">{room.name}</h2>
+              <h3 className="text-lg font-semibold text-gray-700 mb-4">Room {room.roomNumber}</h3>
+
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm mb-4 gap-2">
+                <p className="text-gray-600">
+                  Type: <span className="font-medium text-gray-900">{room.type}</span>
+                </p>
+                <p className="text-gray-600">
+                  Price: <span className="font-extrabold text-green-600">${room.price}</span> / night
+                </p>
+              </div>
+
+              {/* Button */}
+              <button
+                onClick={() => handleCheckout(room._id)}
+                className="mt-auto w-full bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow-md"
+              >
+                Process Check-Out
+              </button>
+            </div>
+
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
   );
 };
 

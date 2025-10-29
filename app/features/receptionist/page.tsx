@@ -57,7 +57,7 @@ export default function ReceptionistDashboardPage() {
           id: room._id,
           name: `Room ${room.roomNumber}`,
           description: `Type: ${room.type} • Capacity: ${room.capacity}`,
-          image: room.image || `/room-${room.roomNumber}.jpg`, 
+          image: `/room-${room.roomNumber}.jpg`,  
           status,
         };
         
@@ -96,6 +96,7 @@ export default function ReceptionistDashboardPage() {
     "Available",
     "Booked",
     "Checked-In",
+    "Checked-Out"
   ];
 
   return (

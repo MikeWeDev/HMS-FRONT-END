@@ -50,7 +50,7 @@ export default function BOOKEDGUST() {
             id: room._id,
             name: `Room ${room.roomNumber}`,
             description: `Type: ${room.type} • Capacity: ${room.capacity}`,
-          image: room.image || `/room-${room.roomNumber}.jpg`, 
+          image:`/room-${room.roomNumber}.jpg`, 
           }));
 
         setBookedRooms(filtered);
