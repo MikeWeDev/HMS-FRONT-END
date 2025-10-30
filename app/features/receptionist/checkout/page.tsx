@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Head from 'next/head';
-
+import Link from 'next/link';
 
 interface Room {
   _id: string;
@@ -84,11 +84,27 @@ const CheckoutPage = () => {
   </Head>
   <h1 className="text-3xl font-bold mb-6">Checked-In Rooms</h1>
 
-  {checkedInRooms.length === 0 ? (
-    <div className="text-center mt-8 text-gray-500">
-      No rooms are currently checked in.
-    </div>
-  ) : (
+ {checkedInRooms.length === 0 ? (
+  <div className="flex flex-col items-center justify-center p-12 bg-white border border-dashed border-gray-300 rounded-xl shadow-inner">
+    {/* Icon: Using a Key or Door to symbolize Check-In/Stay */}
+    <svg className="w-14 h-14 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 7a2 2 0 012 2v5.5a3.5 3.5 0 01-7 0V9a2 2 0 012-2M12 21h.01M12 3a7 7 0 00-7 7v4.5a7 7 0 0014 0V10a7 7 0 00-7-7z"></path>
+    </svg>
+    
+    <h3 className="text-xl font-bold text-gray-800 mb-2">
+     No Departures to Process
+    </h3>
+    
+    <p className="text-md text-gray-500 text-center max-w-md">
+      There are **no rooms currently pending check-out**. Guests who have departed and require final billing will appear here.
+    </p>
+    
+    {/* Optional CTA to View Upcoming Bookings */}
+    <Link href="/features/receptionist/guests" className="mt-4 px-4 py-2 text-sm font-semibold text-green-700 bg-green-50 rounded-lg hover:bg-green-100 transition duration-150 border border-green-200">
+     View Current Check-Ins
+    </Link>
+  </div>
+) : (
     <div className="flex flex-wrap -mx-2 items-start">
       {checkedInRooms.map((room) => (
         <div

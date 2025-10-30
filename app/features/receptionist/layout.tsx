@@ -17,7 +17,7 @@ export default function ReceptionistLayout({ children }: { children: React.React
     return (
         <div className="flex flex-col md:flex-row min-h-screen relative">
             {/* --- Mobile Navbar (Matching Guest UI) --- */}
-            <header className="md:hidden flex items-center justify-between bg-white shadow px-4 py-3 sticky top-0 z-20">
+            <header className="md:hidden flex items-center justify-between bg-white shadow px-4 py-3 sticky top-0 z-20 ">
                 {/* 💡 Updated text for Receptionist */}
                 <div className="text-lg font-semibold text-gray-800">Royal Stay Reception</div> 
                 <button

@@ -103,7 +103,7 @@ export default function RoomCheckoutPage() {
       // Redirect after a delay to show success message
       setTimeout(() => {
         router.push('/features/receptionist/checkout'); // Go to the main room list
-      }, 2000);
+      }, 1000);
 
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred during checkout.');

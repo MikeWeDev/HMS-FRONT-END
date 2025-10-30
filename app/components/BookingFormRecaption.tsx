@@ -119,7 +119,7 @@ export default function BookingForm({ room }: BookingFormProps) {
         throw new Error(data.message || "Booking failed");
       }
 
-      router.push("/features/guest/my-bookings?success=1");
+      router.push("/features/receptionist");
        setLoading(false);
     } catch (error: unknown) {
       console.error("Booking failed:", error);

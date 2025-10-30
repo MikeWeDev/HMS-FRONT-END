@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import RoomCard from "../../components/RoomCard";
+import RoomCard from "../../components/RoomCardRecption";
 import { BedDouble, Loader2 } from "lucide-react";
 
 // New interface for the raw data fetched from the API
@@ -96,7 +96,7 @@ export default function ReceptionistDashboardPage() {
     "Available",
     "Booked",
     "Checked-In",
-    "Checked-Out"
+   
   ];
 
   return (

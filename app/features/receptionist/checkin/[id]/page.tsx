@@ -80,7 +80,7 @@ export default function RoomCheckInPage() {
       setSuccess(true);
        setTimeout(() => {
        router.push('/features/receptionist/guests');
-      }, 2000);
+      }, 1000);
     } catch (err) {
       log('Check-in error', err);
       console.error('Check-in error:', err);

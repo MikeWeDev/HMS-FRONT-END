@@ -87,7 +87,7 @@ export default function GuestSidebar({
       {/* Logout Card */}
       <div className="mt-10">
         <Link
-          href="/auth/login"
+          href="/"
           onClick={onLinkClick} 
           className="flex items-center gap-4 px-5 py-3 rounded-2xl font-medium text-red-500 bg-white shadow-md hover:bg-red-50 hover:text-red-600 hover:scale-[1.03] transition"
         >

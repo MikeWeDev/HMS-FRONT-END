@@ -64,7 +64,7 @@ export default function AdmineistSidebar() {
           </Link>
 
           <Link
-            href="/auth/login"
+            href="/"
             className="flex items-center gap-2 px-2 py-2 rounded hover:bg-red-50 transition"
           >
             <LogOut className="w-4 h-4 text-red-500" />
