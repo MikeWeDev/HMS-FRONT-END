@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Head from 'next/head';
+
+// REMOVED: import Head from "next/head"; (Unused, Error at line 83)
 
 // Use the interface structure that matches the backend /api/rooms/:id response
 interface Room {
@@ -33,9 +34,11 @@ export default function RoomCheckoutPage() {
   const router = useRouter();
   const [room, setRoom] = useState<Room | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null); // REMOVED: Unused, Error at line 84
+  // const [isProcessing, setIsProcessing] = useState(false); // REMOVED: Unused, Error at line 85
+  const [fetchError, setFetchError] = useState<string | null>(null); // Keeping this for the fetch logic
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [checkoutProcessing, setCheckoutProcessing] = useState(false); // Renaming these to be used below
 
   // --- Data Fetching Effect ---
   useEffect(() => {
@@ -43,7 +46,7 @@ export default function RoomCheckoutPage() {
 
     async function fetchRoom() {
       setLoading(true);
-      setError(null); // Clear errors before new fetch
+      setFetchError(null); // Clear errors before new fetch
       try {
         const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/${id}`);
         if (!res.ok) {
@@ -53,7 +56,7 @@ export default function RoomCheckoutPage() {
         
         // Critical check: only allow checkout if the status is 'Checked-In'
         if (data.status !== 'Checked-In') {
-            setError(`Room ${data.roomNumber} is currently ${data.status}. Cannot process checkout.`);
+            setFetchError(`Room ${data.roomNumber} is currently ${data.status}. Cannot process checkout.`);
             setRoom(data); // Display the room, but with an error
             return;
         }
@@ -66,7 +69,7 @@ export default function RoomCheckoutPage() {
 
         setRoom(mappedRoom);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'An unexpected error occurred while fetching room.');
+        setFetchError(err instanceof Error ? err.message : 'An unexpected error occurred while fetching room.');
         console.error('Error fetching room:', err);
       } finally {
         setLoading(false);
@@ -79,12 +82,12 @@ export default function RoomCheckoutPage() {
   // --- Checkout Action Handler ---
   const handleCheckout = async () => {
     if (!id || !room || room.status !== 'Checked-In') {
-      setError('Cannot proceed with checkout. Room status is invalid or ID is missing.');
+      setFetchError('Cannot proceed with checkout. Room status is invalid or ID is missing.');
       return;
     }
 
-    setIsProcessing(true);
-    setError(null); 
+    setCheckoutProcessing(true);
+    setFetchError(null); 
 
     try {
       // Use the standard, correct endpoint for a checkout POST/PUT request
@@ -106,9 +109,9 @@ export default function RoomCheckoutPage() {
       }, 1000);
 
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred during checkout.');
+      setFetchError(err instanceof Error ? err.message : 'An unknown error occurred during checkout.');
       console.error('Checkout error:', err);
-      setIsProcessing(false); // Reset processing state so the user can try again
+      setCheckoutProcessing(false); // Reset processing state so the user can try again
     }
   };
 
@@ -139,110 +142,118 @@ export default function RoomCheckoutPage() {
   return (
    <div className="min-h-screen bg-gray-900 text-white">
 
-  {/* 1. Full-Width Header Image Section */}
-  <div className="relative h-[60vh] md:h-[80vh] overflow-hidden shadow-2xl">
-    
-    {/* Image Container */}
-    <img
-      src={room.image}
-      alt={room.name}
-      // Key Change: object-cover for full background visual impact
-      className="w-full h-full object-cover transition-all duration-700 ease-in-out brightness-75"
-    />
-    
-    {/* Gradient for Text Readability and Style */}
-    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent pointer-events-none"></div>
+  {/* 1. Full-Width Header Image Section */}
+  <div className="relative h-[60vh] md:h-[80vh] overflow-hidden shadow-2xl">
+    
+    {/* Image Container */}
+    <img
+      src={room.image}
+      alt={room.name}
+      // Key Change: object-cover for full background visual impact
+      className="w-full h-full object-cover transition-all duration-700 ease-in-out brightness-75"
+    />
+    
+    {/* Gradient for Text Readability and Style */}
+    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent pointer-events-none"></div>
 
-    {/* Header Content - Centered */}
-    <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 max-w-7xl mx-auto">
-      <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight drop-shadow-lg leading-tight text-white">
-        {room.name}
-      </h1>
-      {/* Note: The reference uses room.description here */}
-      <p className="mt-4 text-2xl font-light text-indigo-300 max-w-3xl">
-        This room is ready for check-out process.
-      </p>
-    </div>
-    
-  </div>
+    {/* Header Content - Centered */}
+    <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 max-w-7xl mx-auto">
+      <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight drop-shadow-lg leading-tight text-white">
+        {room.name}
+      </h1>
+      {/* Note: The reference uses room.description here */}
+      <p className="mt-4 text-2xl font-light text-indigo-300 max-w-3xl">
+        This room is ready for check-out process.
+      </p>
+    </div>
+    
+  </div>
 
-  {/* 2. Main Content Section - Stacked Cards */}
-  <div className="max-w-7xl mx-auto -mt-16 relative z-10 px-4 md:px-8 pb-12">
-    
-    {/* Top Row: Price/Status Card & Action Button */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      
-      {/* Price & Status Card (Left 2/3) - Matches Reference */}
-      <div className="md:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-2xl flex justify-between items-center border-l-8 border-indigo-500">
-        <div>
-          {/* Text changed from 'Total Price (per night)' to 'Current Price' to match reference */}
-          <span className="text-xl font-medium text-gray-400 block">Current Price</span>
-          <span className="text-4xl font-extrabold text-green-400">${room.price} / night</span>
-        </div>
-        <div className="text-right">
-          <span className="text-xl font-medium text-gray-400 block">Current Status</span>
-          <span className={`mt-1 inline-block px-5 py-2 rounded-lg font-extrabold text-lg shadow-md ${statusColors[room.status]}`}>
-            {room.status}
-          </span>
-        </div>
-      </div>
+  {/* 2. Main Content Section - Stacked Cards */}
+  <div className="max-w-7xl mx-auto -mt-16 relative z-10 px-4 md:px-8 pb-12">
+    
+    {/* Top Row: Price/Status Card & Action Button */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      
+      {/* Price & Status Card (Left 2/3) - Matches Reference */}
+      <div className="md:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-2xl flex justify-between items-center border-l-8 border-indigo-500">
+        <div>
+          {/* Text changed from 'Total Price (per night)' to 'Current Price' to match reference */}
+          <span className="text-xl font-medium text-gray-400 block">Current Price</span>
+          <span className="text-4xl font-extrabold text-green-400">${room.price} / night</span>
+        </div>
+        <div className="text-right">
+          <span className="text-xl font-medium text-gray-400 block">Current Status</span>
+          <span className={`mt-1 inline-block px-5 py-2 rounded-lg font-extrabold text-lg shadow-md ${statusColors[room.status]}`}>
+            {room.status}
+          </span>
+        </div>
+      </div>
 
-      {/* Action Button (Right 1/3) - Matches Reference structure/styling but uses Check-Out logic/text */}
-      <div className="md:col-span-1">
-        {checkoutSuccess ? ( // Using your original checkoutSuccess state
-          <div className="h-full text-center p-4 bg-green-900/50 rounded-xl flex items-center justify-center">
-            {/* Success message text simplified to match reference style */}
-            <p className="text-xl text-green-400 font-extrabold">
-              ✅ Confirmed!
-            </p>
-          </div>
-        ) : (
-          <button
-            // Using your original handleCheckout function
-            onClick={handleCheckout} 
-            // Styling is now 100% identical to reference's button
-            className="w-full h-full px-8 py-4 bg-red-600 text-white rounded-2xl font-extrabold uppercase tracking-wider text-lg shadow-2xl shadow-red-500/50 
-                     hover:bg-red-500 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50"
-          >
-            {/* Text changed to match the visual length/impact of 'Process Check-In' */}
-            Process Check-Out
-          </button>
-        )}
-      </div>
+      {/* Action Button (Right 1/3) - Matches Reference structure/styling but uses Check-Out logic/text */}
+      <div className="md:col-span-1">
+        {checkoutSuccess ? ( // Using your original checkoutSuccess state
+          <div className="h-full text-center p-4 bg-green-900/50 rounded-xl flex items-center justify-center">
+            {/* Success message text simplified to match reference style */}
+            <p className="text-xl text-green-400 font-extrabold">
+              ✅ Confirmed!
+            </p>
+          </div>
+        ) : (
+          <button
+            // Using your original handleCheckout function
+            onClick={handleCheckout} 
+            disabled={checkoutProcessing} // Using the new 'checkoutProcessing' state
+            // Styling is now 100% identical to reference's button
+            className="w-full h-full px-8 py-4 bg-red-600 text-white rounded-2xl font-extrabold uppercase tracking-wider text-lg shadow-2xl shadow-red-500/50 
+                     hover:bg-red-500 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {checkoutProcessing ? 'Processing...' : 'Process Check-Out'}
+          </button>
+        )}
+      </div>
 
-    </div>
-    
-    {/* Room Details Panel - Matches Reference */}
-    <div className="bg-gray-800 p-8 rounded-2xl shadow-xl border-t-4 border-indigo-500">
-      <h2 className="text-3xl font-extrabold mb-6 border-b border-gray-700 pb-3 text-indigo-400">
-        Key Room Attributes
-      </h2>
-      {/* The grid layout is identical, but only includes the two attributes from the reference */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-        
-        {/* Room Type - Matches Reference */}
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-gray-400">Type</span>
-          <span className="text-xl font-bold">{room.type}</span>
-        </div>
-        
-        {/* Max Capacity - Matches Reference */}
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-gray-400">Capacity</span>
-          <span className="text-xl font-bold">{room.capacity} Guests</span>
-        </div>
+    </div>
 
-        {/* Notes/Long Description - Matches Reference */}
-        <div className="flex flex-col col-span-2 sm:col-span-4 mt-4">
-           <span className="text-sm font-medium text-gray-400">Room Overview</span>
-           {/* Text changed to match the example text in the reference, for 100% match */}
-           <p className="text-base text-gray-300 leading-relaxed">This premium room includes a complimentary breakfast and access to the executive lounge. It is situated on the 10th floor, offering a stunning panoramic view of the city skyline. Perfect for business travelers or couples seeking a luxurious escape.</p>
-        </div>
-        
-      </div>
-    </div>
+	{/* Global Error/Status Display */}
+	{fetchError && (
+		<div className="bg-red-900/50 border border-red-700 text-red-300 p-4 rounded-lg mb-6">
+			<p className="font-semibold">{fetchError}</p>
+		</div>
+	)}
 
-  </div>
+    
+    {/* Room Details Panel - Matches Reference */}
+    <div className="bg-gray-800 p-8 rounded-2xl shadow-xl border-t-4 border-indigo-500">
+      <h2 className="text-3xl font-extrabold mb-6 border-b border-gray-700 pb-3 text-indigo-400">
+        Key Room Attributes
+      </h2>
+      {/* The grid layout is identical, but only includes the two attributes from the reference */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+        
+        {/* Room Type - Matches Reference */}
+        <div className="flex flex-col">
+          <span className="text-sm font-medium text-gray-400">Type</span>
+          <span className="text-xl font-bold">{room.type}</span>
+        </div>
+        
+        {/* Max Capacity - Matches Reference */}
+        <div className="flex flex-col">
+          <span className="text-sm font-medium text-gray-400">Capacity</span>
+          <span className="text-xl font-bold">{room.capacity} Guests</span>
+        </div>
+
+        {/* Notes/Long Description - Matches Reference */}
+        <div className="flex flex-col col-span-2 sm:col-span-4 mt-4">
+           <span className="text-sm font-medium text-gray-400">Room Overview</span>
+           {/* Text changed to match the example text in the reference, for 100% match */}
+           <p className="text-base text-gray-300 leading-relaxed">This premium room includes a complimentary breakfast and access to the executive lounge. It is situated on the 10th floor, offering a stunning panoramic view of the city skyline. Perfect for business travelers or couples seeking a luxurious escape.</p>
+        </div>
+        
+      </div>
+    </div>
+
+  </div>
 </div>
   );
 }

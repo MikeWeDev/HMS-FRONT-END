@@ -96,8 +96,8 @@ export default function BOOKEDGUST() {
       No Bookings Yet!
     </h3>
     <p className="text-gray-500 text-center max-w-sm">
-      It looks like you haven't booked any rooms yet. Start exploring available options to plan your stay.
-    </p>
+  It looks like you haven&apos;t booked any rooms yet. Start exploring available options to plan your stay.
+</p>
      {/* Optional CTA to View Upcoming Bookings */}
         <Link href="/features/receptionist" className="mt-4 px-4 py-2 text-sm font-semibold text-green-700 bg-green-50 rounded-lg hover:bg-green-100 transition duration-150 border border-green-200">
          View Current Avaliable Rooms
