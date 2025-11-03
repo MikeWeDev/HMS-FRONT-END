@@ -1,44 +1,78 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import AdmineistSidebar from "./sidbar";
-import { Menu } from "lucide-react";
+import { useState } from 'react';
+// 💡 IMPORTANT: Change the import path to reference the ReceptionistSidebar
+import ReceptionistSidebar from './sidbar'; 
+import { Menu, X } from 'lucide-react';
 
-export default function AdmineLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+export default function AdminetLayout({ children }: { children: React.ReactNode }) {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  return (
-    <div className="flex flex-col md:flex-row min-h-screen">
-      {/* Mobile Navbar */}
-      <div className="md:hidden flex items-center justify-between bg-white border-b border-gray-200 px-4 py-3 shadow-sm w-[100vw]">
-        <h1 className="text-lg font-semibold text-gray-800">Admin Panel</h1>
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-md hover:bg-gray-100 transition"
-        >
-          <Menu className="w-6 h-6 text-green-600 " />
-        </button>
-      </div>
+    // Function to close the sidebar. This will be passed to the links.
+    const closeSidebar = () => setIsSidebarOpen(false); 
 
-      {/* Sidebar */}
-      <div
-        className={`fixed md:static inset-y-0 left-0 transform ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 transition-transform duration-300 ease-in-out z-50`}
-      >
-        <AdmineistSidebar />
-      </div>
+    // Function to toggle the sidebar (used by the hamburger button and the overlay).
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 z-40 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+    return (
+        <div className="flex flex-col md:flex-row min-h-screen relative">
+            {/* --- Mobile Navbar (Matching Guest UI) --- */}
+            <header className="md:hidden flex items-center justify-between bg-white shadow px-4 py-3 sticky top-0 z-20 ">
+                {/* 💡 Updated text for Receptionist */}
+                <div className="text-lg font-semibold text-gray-800">Royal Stay Reception</div> 
+                <button
+                    onClick={toggleSidebar}
+                    className="p-2 rounded-md hover:bg-gray-100 transition"
+                    aria-label="Toggle menu"
+                >
+                    {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 text-black" />}
+                </button>
+            </header>
 
-      {/* Main content */}
-      <main className="flex-1 p-4 bg-gray-50">{children}</main>
-    </div>
-  );
+            {/* --- Sidebar (Desktop) --- */}
+            {/* FIX 2: Added 'sticky top-0' and 'overflow-y-auto' to ensure the sidebar is fixed in place and takes up the whole screen height. */}
+            <div className="hidden md:block sticky top-0 h-screen overflow-y-auto"> 
+                {/* 💡 Use the ReceptionistSidebar component */}
+                <ReceptionistSidebar onLinkClick={() => {}} /> 
+            </div>
+
+            {/* --- Sidebar Drawer (Mobile) --- */}
+            {isSidebarOpen && (
+                <div className="fixed inset-0 z-40 flex">
+                    {/* Overlay - Clicks outside the sidebar close it */}
+                    <div
+                        onClick={closeSidebar} 
+                        className="fixed inset-0 bg-black bg-opacity-40 transition-opacity"
+                    ></div>
+
+                    {/* Drawer */}
+                    <div className="relative bg-white w-64 h-full shadow-lg z-50 animate-slide-in">
+                        {/* 💡 Use the ReceptionistSidebar component and pass the close function */}
+                        <ReceptionistSidebar 
+                            isMobile 
+                            onLinkClick={closeSidebar} 
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* --- Main Content --- */}
+            <main className="flex-1 bg-gray-50">{children}</main>
+
+            {/* --- Animation Styles (Keeping for completeness) --- */}
+            <style jsx>{`
+                @keyframes slide-in {
+                    from {
+                        transform: translateX(-100%);
+                    }
+                    to {
+                        transform: translateX(0);
+                    }
+                }
+                .animate-slide-in {
+                    animation: slide-in 0.3s ease-out forwards;
+                }
+            `}</style>
+        </div>
+    );
 }

@@ -1,77 +1,103 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 import {
-  Building2,
-  LayoutDashboard,
-  CalendarDays,
-  User,
-  ClipboardList,
-  MessageCircle,
-  LogOut,
-} from "lucide-react";
+    Building2,
+    LayoutDashboard,
+    CalendarDays,
+    User,
+    ClipboardList,
+    MessageCircle,
+    Settings,
+    LogOut,
+} from 'lucide-react';
 
-export default function AdmineistSidebar() {
-  return (
-    <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between h-screen overflow-y-auto">
-      <div>
-        {/* Logo */}
-        <div className="text-2xl font-bold text-primary flex items-center gap-2 mb-10">
-          <Building2 className="w-6 h-6 text-green-600" />
-          <span className="text-gray-800">Royal Stay Admin</span>
-        </div>
+interface ReceptionistSidebarProps {
+    isMobile?: boolean;
+    active?: string; // Active route for styling
+    notifications?: { [key: string]: number }; // Notification badges
+    // NEW PROP: Function to close the sidebar after a link is clicked (for mobile)
+    onLinkClick: () => void;
+}
 
-        {/* Navigation */}
-        <nav className="flex flex-col gap-4 text-sm font-medium">
-          <Link
-            href="/features/admine"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
-          >
-            <LayoutDashboard className="w-4 h-4 text-green-600" />
-            Dashboard
-          </Link>
+export default function ReceptionistSidebar({
+    isMobile = false,
+    active,
+    notifications = {},
+    onLinkClick,
+}: ReceptionistSidebarProps) {
+   const links = [
+    { href: "/features/admine", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/features/admine/guest", label: "All Guests", icon: User },
+    { href: "/features/admine/stough", label: "All Staff", icon: ClipboardList },
+    { href: "/features/admine/rooms", label: "Edit Rooms", icon: CalendarDays },
+    { href: "/features/admine/message", label: "Messages", icon: MessageCircle },
+  ];
 
-          <Link
-            href="/features/admine/guest"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
-          >
-            <User className="w-4 h-4 text-green-600" />
-            All Guests
-          </Link>
+    // Define the primary accent color class for Receptionist
+    const ACCENT_COLOR_CLASS = 'green'; // Use green for contrast with Guest blue
 
-          <Link
-            href="/features/admine/stough"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
-          >
-            <ClipboardList className="w-4 h-4 text-green-600" />
-            All Staff
-          </Link>
+    return (
+        <aside
+            className={`${isMobile ? 'fixed inset-y-0 left-0 z-50 flex' : 'hidden md:sticky md:top-0 md:flex'} 
+                w-80 bg-gray-50 p-6 flex-col justify-between `}
+        >
+            {/* Top Profile Card */}
+            <div className="mb-10">
+                <div className="flex items-center gap-4 bg-white rounded-2xl p-4 ">
+                    <Building2 className={`w-10 h-10 text-${ACCENT_COLOR_CLASS}-600`} />
+                    <div>
+                        <h1 className="text-lg font-semibold text-gray-900">Royal Stay Hotel</h1>
+                        <p className="text-sm text-gray-500">Reception Panel</p>
+                    </div>
+                </div>
+            </div>
 
-          <Link
-            href="/features/admine/rooms"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
-          >
-            <CalendarDays className="w-4 h-4 text-green-600" />
-            Edit Rooms
-          </Link>
+            {/* Navigation */}
+            <nav className="flex flex-col gap-4">
+                {links.map((link) => {
+                    const Icon = link.icon;
+                    const isActive = active === link.href;
+                    return (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={onLinkClick}
+                            className={`
+                                relative flex items-center gap-4 px-5 py-3 rounded-2xl font-medium text-gray-700 transition-all
+                                ${isActive 
+                                    ? `bg-${ACCENT_COLOR_CLASS}-600 text-white shadow-lg` 
+                                    : `bg-white hover:bg-${ACCENT_COLOR_CLASS}-50 hover:scale-[1.03] shadow-md`}
+                            `}
+                        >
+                            {/* Active bar */}
+                            {isActive && <span className="absolute left-0 top-0 h-full w-1 bg-white rounded-r-xl"></span>}
 
-          <Link
-            href="/features/admine/message"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-green-50 transition"
-          >
-            <MessageCircle className="w-4 h-4 text-green-600" />
-            Messages
-          </Link>
+                            <Icon className={`w-6 h-6 transition-colors ${isActive ? 'text-white' : `text-${ACCENT_COLOR_CLASS}-600`}`} />
+                            <span>{link.label}</span>
 
-          <Link
-            href="/"
-            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-red-50 transition"
-          >
-            <LogOut className="w-4 h-4 text-red-500" />
-            Logout
-          </Link>
-        </nav>
-      </div>
-    </aside>
-  );
+                            {/* Optional badge */}
+                            {notifications[link.label] && (
+                                <span className="ml-auto bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full animate-pulse">
+                                    {notifications[link.label]}
+                                </span>
+                            )}
+                        </Link>
+                    );
+                })}
+            </nav>
+
+            {/* Logout Card */}
+            <div className="mt-10">
+                <Link
+                    href="/"
+                    onClick={onLinkClick} 
+                    className="flex items-center gap-4 px-5 py-3 rounded-2xl font-medium text-red-500 bg-white shadow-md hover:bg-red-50 hover:text-red-600 hover:scale-[1.03] transition"
+                >
+                    <LogOut className="w-6 h-6" />
+                    Logout
+                </Link>
+            </div>
+        </aside>
+    );
 }

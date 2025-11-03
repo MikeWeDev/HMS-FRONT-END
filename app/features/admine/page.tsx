@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { Loader2 } from "lucide-react";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Loader2,
+  CheckCircle,
+  Clock,
+  KeyRound,
+  BedDouble,
+  DollarSign,
+  Users,
+  AlertCircle,
+  ExternalLink,
+  ClipboardList,
+} from "lucide-react";
 
 // --- Type Definitions ---
-export interface RawRoom {
-  _id: string;
-  roomNumber: string;
-  type: string;
-  price: number;
-  capacity: number;
-  amenities: string[];
-  isAvailable: boolean;
-  status?: "Available" | "Booked" | "Checked-In" | "Checked-Out";
-}
-
 export interface Room {
   _id: string;
   roomNumber: string;
@@ -26,7 +26,50 @@ export interface Room {
   status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
 }
 
+const statusColorMap: Record<Room["status"], string> = {
+  Available: "bg-green-50 text-green-700 ring-green-600/20",
+  Booked: "bg-amber-50 text-amber-700 ring-amber-600/20",
+  "Checked-In": "bg-blue-50 text-blue-700 ring-blue-600/20",
+  "Checked-Out": "bg-gray-50 text-gray-700 ring-gray-600/20",
+};
+
+// Custom router hook to handle navigation without Next.js dependency
+const useSimpleRouter = () => ({
+  push: (path: string) => {
+    // In a real application, this would be a full client-side route change
+    console.log(`Navigating to: ${path}`);
+    // Fallback for browser environment
+    window.location.href = path; 
+  },
+});
+
+
+// --- Reusable Components ---
+
+const StatusBadge: React.FC<{ status: Room["status"] }> = ({ status }) => (
+  <span
+    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${statusColorMap[status]}`}
+  >
+    {status}
+  </span>
+);
+
+const SummaryCard: React.FC<{ title: string, count: number, icon: React.ElementType, color: string }> = ({ title, count, icon: Icon, color }) => (
+  <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
+    <div className={`p-3 rounded-full ${color} bg-opacity-10 mb-3`}>
+      <Icon className={`w-6 h-6 ${color}`} />
+    </div>
+    <div className="text-4xl font-extrabold text-gray-900">{count}</div>
+    <span className="text-gray-500 mt-1 text-base font-semibold">{title}</span>
+  </div>
+);
+
+
+// --- Main Component ---
+
 export default function AdminPage() {
+  const simpleRouter = useSimpleRouter();
+  
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,22 +82,26 @@ export default function AdminPage() {
       const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
       if (!res.ok) throw new Error("Failed to fetch rooms");
 
-      const data: RawRoom[] = await res.json();
+      const data: any[] = await res.json(); // Use any for raw fetch data
 
-      const mappedRooms: Room[] = data.map((room: RawRoom) => ({
+      const mappedRooms: Room[] = data.map((room) => ({
         _id: room._id,
         roomNumber: room.roomNumber,
         type: room.type,
         price: room.price,
         capacity: room.capacity,
-        amenities: room.amenities,
+        amenities: room.amenities || [],
         isAvailable: room.isAvailable,
+        // Ensure status field exists, defaulting based on isAvailable if missing
         status: room.status || (room.isAvailable ? "Available" : "Booked"),
       }));
 
+      // Sort by room number for cleaner display
+      mappedRooms.sort((a, b) => a.roomNumber.localeCompare(b.roomNumber, undefined, { numeric: true, sensitivity: 'base' }));
+
       setRooms(mappedRooms);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
+      setError(err instanceof Error ? err.message : "An unknown error occurred while fetching data.");
     } finally {
       setLoading(false);
     }
@@ -68,115 +115,139 @@ export default function AdminPage() {
   const availableCount = rooms.filter((r) => r.status === "Available").length;
   const bookedCount = rooms.filter((r) => r.status === "Booked").length;
   const checkedInCount = rooms.filter((r) => r.status === "Checked-In").length;
+  const totalCount = rooms.length;
+
+
+  // --- Render Functions ---
+
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8">
+      <Loader2 className="animate-spin w-12 h-12 text-blue-600" />
+      <span className="mt-4 text-xl font-medium text-gray-700">Loading Hotel Rooms Dashboard...</span>
+    </div>
+  );
+
+  if (error && rooms.length === 0) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 p-8 text-red-700">
+      <AlertCircle className="w-12 h-12 mb-4" />
+      <div className="text-xl font-bold">Data Fetch Error</div>
+      <p className="mt-2 text-center max-w-lg">{error}</p>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 p-4 sm:p-6 md:p-10 w-[100vw]">
-      <h1 className="text-2xl md:text-3xl font-semibold mb-6 text-center md:text-left">
-        Hotel Rooms Dashboard
+    <div className="min-h-screen bg-gray-100 font-sans p-4 sm:p-8 w-[100vw] md:w-[calc(100vw-22rem)]">
+      {/* Header */}
+      <h1 className="md:text-4xl text-xl font-extrabold text-gray-900 mb-8 tracking-tight border-b pb-2">
+        Hotel Room Inventory
       </h1>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        {/* Available */}
-        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center justify-center hover:scale-105 transform transition-all duration-300 cursor-pointer  w-[90%] md:w-full">
-          <div className="flex items-center gap-2 text-green-600">
-            <span className="text-3xl font-extrabold">{availableCount}</span>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <span className="text-gray-600 mt-2 text-lg font-medium">Available Rooms</span>
-        </div>
-
-        {/* Booked */}
-        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center justify-center hover:scale-105 transform transition-all duration-300 cursor-pointer  w-[90%] md:w-full">
-          <div className="flex items-center gap-2 text-yellow-500">
-            <span className="text-3xl font-extrabold">{bookedCount}</span>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 17v-4h6v4M12 3v4m0 0l3-3m-3 3L9 3"
-              />
-            </svg>
-          </div>
-          <span className="text-gray-600 mt-2 text-lg font-medium">Booked Rooms</span>
-        </div>
-
-        {/* Checked-In */}
-        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center justify-center hover:scale-105 transform transition-all duration-300 cursor-pointer w-[90%] md:w-full">
-          <div className="flex items-center gap-2 text-blue-600">
-            <span className="text-3xl font-extrabold">{checkedInCount}</span>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18M3 12h18M3 17h18" />
-            </svg>
-          </div>
-          <span className="text-gray-600 mt-2 text-lg font-medium">Checked-In Rooms</span>
-        </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <SummaryCard 
+          title="Total Rooms" 
+          count={totalCount} 
+          icon={BedDouble} 
+          color="text-gray-500" 
+        />
+        <SummaryCard 
+          title="Available" 
+          count={availableCount} 
+          icon={CheckCircle} 
+          color="text-green-600" 
+        />
+        <SummaryCard 
+          title="Booked" 
+          count={bookedCount} 
+          icon={Clock} 
+          color="text-amber-500" 
+        />
+        <SummaryCard 
+          title="Checked-In" 
+          count={checkedInCount} 
+          icon={KeyRound} 
+          color="text-blue-600" 
+        />
       </div>
 
-      {/* Loading / Error */}
-      {loading && (
-        <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
-          <Loader2 className="animate-spin w-5 h-5" /> Loading rooms...
-        </div>
-      )}
-      {error && <div className="text-red-600 mb-4 text-center">{error}</div>}
-
       {/* Rooms Table */}
-      {!loading && rooms.length > 0 && (
-        <div className="overflow-x-auto bg-white rounded-xl shadow">
-          <table className="min-w-full border-collapse text-sm md:text-base">
-            <thead className="bg-gray-100 text-gray-700">
+      <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200">
+        <div className="p-6 border-b flex items-center gap-2">
+            <ClipboardList className="w-5 h-5 text-gray-700"/>
+            <h2 className="text-xl font-bold text-gray-800">Room Status List ({rooms.length})</h2>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 border text-left whitespace-nowrap">Room #</th>
-                <th className="px-4 py-3 border text-left whitespace-nowrap">Type</th>
-                <th className="px-4 py-3 border text-left whitespace-nowrap">Price</th>
-                <th className="px-4 py-3 border text-left whitespace-nowrap">Capacity</th>
-                <th className="px-4 py-3 border text-left whitespace-nowrap">Status</th>
-                <th className="px-4 py-3 border text-left whitespace-nowrap">Amenities</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Room #</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Type / Capacity</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">Price (Birr)</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">Amenities</th>
+                <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-right font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {rooms.map((room) => (
-                <tr
-                  key={room._id}
-                  className="hover:bg-gray-50 transition-all duration-150 border-b last:border-none"
-                >
-                  <td className="px-4 py-2">{room.roomNumber}</td>
-                  <td className="px-4 py-2">{room.type}</td>
-                  <td className="px-4 py-2">${room.price}</td>
-                  <td className="px-4 py-2">{room.capacity}</td>
-                  <td
-                    className={`px-4 py-2 font-semibold ${
-                      room.status === "Available"
-                        ? "text-green-600"
-                        : room.status === "Booked"
-                        ? "text-yellow-600"
-                        : "text-blue-600"
-                    }`}
-                  >
-                    {room.status}
+                <tr key={room._id} className="hover:bg-blue-50 transition-all duration-150">
+                  
+                  {/* Room Number */}
+                  <td className="px-6 py-4 font-bold text-lg text-gray-900 whitespace-nowrap">
+                    {room.roomNumber}
                   </td>
-                  <td className="px-4 py-2">
-                    <div className="flex flex-wrap gap-1 justify-center md:justify-start">
-                      {room.amenities.map((a, i) => (
-                        <span
-                          key={i}
-                          className="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs md:text-sm"
-                        >
+                  
+                  {/* Type / Capacity */}
+                  <td className="px-6 py-4">
+                    <div className="text-base font-medium text-gray-700">{room.type}</div>
+                    <div className="text-xs text-gray-500 flex items-center mt-1">
+                        <Users className="w-3 h-3 mr-1" /> Max {room.capacity}
+                    </div>
+                  </td>
+                  
+                  {/* Price */}
+                  <td className="px-6 py-4 text-gray-700 hidden sm:table-cell">
+                    <div className="flex items-center">
+                        <DollarSign className="w-4 h-4 mr-1 text-green-600" /> 
+                        {new Intl.NumberFormat('en-US').format(room.price)}
+                    </div>
+                  </td>
+                  
+                  {/* Amenities */}
+                  <td className="px-6 py-4 hidden md:table-cell">
+                    <div className="flex flex-wrap gap-1 max-w-sm">
+                      {room.amenities.slice(0, 3).map((a, i) => (
+                        <span key={i} className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md text-xs whitespace-nowrap">
                           {a}
                         </span>
                       ))}
+                      {room.amenities.length > 3 && (
+                          <span className="text-xs text-gray-500 px-2 py-0.5">+{room.amenities.length - 3} more</span>
+                      )}
                     </div>
+                  </td>
+                  
+                  {/* Status */}
+                  <td className="px-6 py-4">
+                    <StatusBadge status={room.status} />
+                  </td>
+                  
+                  {/* Actions */}
+                  <td className="px-6 py-4 text-right">
+                    <button
+                      onClick={() => simpleRouter.push(`/features/admine/rooms/${room._id}`)}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 border border-blue-500 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-600 hover:text-white transition shadow-md"
+                    >
+                      <ExternalLink className="w-4 h-4" /> Edit
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      )}
+      </div>
     </div>
   );
 }
