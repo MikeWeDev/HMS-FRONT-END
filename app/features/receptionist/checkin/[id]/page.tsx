@@ -152,72 +152,77 @@ return (
   <div className="max-w-7xl mx-auto -mt-16 relative z-10 px-4 md:px-8 pb-12">
     
     {/* Top Row: Price/Status Card & Action Button */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 gap-4 md:mb-8 mb-2">
       
       {/* Price & Status Card (Left 2/3) */}
-      <div className="md:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-2xl flex justify-between items-center border-l-8 border-indigo-500">
-        <div>
-          <span className="text-xl font-medium text-gray-400 block">Current Price</span>
-          <span className="text-4xl font-extrabold text-green-400">${room.price} / night</span>
-        </div>
-        <div className="text-right">
-          <span className="text-xl font-medium text-gray-400 block">Current Status</span>
-          <span className={`mt-1 inline-block px-5 py-2 rounded-lg font-extrabold text-lg shadow-md ${statusColors[room.status]}`}>
-            {room.status}
-          </span>
-        </div>
-      </div>
+     <div className="md:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center border-l-8 border-indigo-500 gap-4">
+    
+    {/* Price Section */}
+    <div className="text-left">
+        <span className="text-sm sm:text-lg font-medium text-gray-400 block">Current Price</span>
+        <span className="text-2xl sm:text-4xl font-extrabold text-green-400">${room.price} / night</span>
+    </div>
+
+    {/* Status Section */}
+    <div className="text-left sm:text-right">
+        <span className="text-sm sm:text-lg font-medium text-gray-400 block">Current Status</span>
+        <span className={`mt-1 inline-block px-3 py-1 sm:px-5 sm:py-2 rounded-lg font-extrabold text-base sm:text-lg shadow-md ${statusColors[room.status]}`}>
+            {room.status}
+        </span>
+    </div>
+</div>
 
       {/* Action Button (Right 1/3) */}
       <div className="md:col-span-1">
-        {success ? (
-          <div className="h-full text-center p-4 bg-green-900/50 rounded-xl flex items-center justify-center">
-            <p className="text-xl text-green-400 font-extrabold">
-              ✅ Confirmed!
-            </p>
-          </div>
-        ) : (
-          <button
-            onClick={handleCheckIn}
-            className="w-full h-full px-8 py-4 bg-red-600 text-white rounded-2xl font-extrabold uppercase tracking-wider text-lg shadow-2xl shadow-red-500/50 
-                    hover:bg-red-500 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50"
-          >
-            Process Check-In
-          </button>
-        )}
-      </div>
+    {success ? (
+      <div className="w-full h-auto py-4 sm:h-full text-center bg-green-900/50 rounded-2xl flex items-center justify-center transition-all duration-300">
+        <p className="text-xl sm:text-2xl text-green-400 font-extrabold p-2">
+          ✅ Confirmed!
+        </p>
+      </div>
+    ) : (
+      <button
+        onClick={handleCheckIn}
+        // KEY CHANGE: Removed h-full on mobile, added specific py-3/4 for button height
+        className="w-full px-8 py-5 sm:py-4 bg-red-600 text-white rounded-2xl font-extrabold uppercase tracking-wider text-base sm:text-lg shadow-2xl shadow-red-500/50 
+                 hover:bg-red-500 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50"
+      >
+        Process Check-In
+      </button>
+    )}
+</div>
 
     </div>
     
+
+
     {/* Room Details Panel */}
-    <div className="bg-gray-800 p-8 rounded-2xl shadow-xl border-t-4 border-indigo-500">
-      <h2 className="text-3xl font-extrabold mb-6 border-b border-gray-700 pb-3 text-indigo-400">
-        Key Room Attributes
-      </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-        
-        {/* Room Type */}
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-gray-400">Type</span>
-          <span className="text-xl font-bold">{room.type}</span>
-        </div>
-        
-        {/* Max Capacity */}
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-gray-400">Capacity</span>
-          <span className="text-xl font-bold">{room.capacity} Guests</span>
-        </div>
+    <div className="bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-xl border-t-4 border-indigo-500">
+    <h2 className="text-2xl sm:text-3xl font-extrabold mb-4 sm:mb-6 border-b border-gray-700 pb-2 sm:pb-3 text-indigo-400">
+        Key Room Attributes
+    </h2>
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+        
+        {/* Room Type */}
+        <div className="flex flex-col">
+            <span className="text-xs sm:text-sm font-medium text-gray-400">Type</span>
+            <span className="text-base sm:text-xl font-bold">{room.type}</span>
+        </div>
+        
+        {/* Max Capacity */}
+        <div className="flex flex-col">
+            <span className="text-xs sm:text-sm font-medium text-gray-400">Capacity</span>
+            <span className="text-base sm:text-xl font-bold">{room.capacity} Guests</span>
+        </div>
 
-        {/* ... other details can go here ... */}
-
-        {/* Notes/Long Description */}
-        <div className="flex flex-col col-span-2 sm:col-span-4 mt-4">
-           <span className="text-sm font-medium text-gray-400">Room Overview</span>
-           <p className="text-base text-gray-300 leading-relaxed">This premium room includes a complimentary breakfast and access to the executive lounge. It is situated on the 10th floor, offering a stunning panoramic view of the city skyline. Perfect for business travelers or couples seeking a luxurious escape.</p>
-        </div>
-        
-      </div>
-    </div>
+        {/* Notes/Long Description */}
+        <div  className="flex flex-col col-span-2 sm:col-span-4 mt-2 sm:mt-4">
+            <span className="text-xs sm:text-sm font-medium text-gray-400">Room Overview</span>
+            <p className="text-sm sm:text-base text-gray-300 leading-relaxed">This premium room includes a complimentary breakfast and access to the executive lounge. It is situated on the 10th floor, offering a stunning panoramic view of the city skyline. Perfect for business travelers or couples seeking a luxurious escape.</p>
+        </div>
+        
+    </div>
+</div>
 
   </div>
 </div>

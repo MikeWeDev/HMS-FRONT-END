@@ -136,7 +136,7 @@ export default function BookingForm({ room }: BookingFormProps) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:p-6 p-0">
         
         {/* === COLUMN 1: BOOKING FORM (2/3 width on large screens) === */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-xl p-6 md:p-8 space-y-8 border border-gray-100 order-2 lg:order-1">
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow-xl p-6 md:p-8 space-y-8 border border-gray-100 order-2">
             <h2 className="text-2xl font-extrabold text-gray-900 border-b pb-4 flex items-center gap-2">
                 <Calendar className="w-6 h-6 text-blue-600" />
                 Your Reservation Details
@@ -267,7 +267,8 @@ export default function BookingForm({ room }: BookingFormProps) {
         </div>
 
         {/* === COLUMN 2: ROOM INFO SUMMARY (1/3 width on large screens) === */}
-        <div className="lg:col-span-1 bg-gray-50 rounded-2xl shadow-md p-4 space-y-4 sticky top-6 self-start order-1 lg:order-2">
+        <div className="lg:col-span-1 bg-gray-50 rounded-2xl shadow-md p-4 space-y-4 
+            **lg:sticky lg:top-6 lg:self-start order-1">
             <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2 border-b pb-3">
                 <Hotel className="w-5 h-5 text-blue-600" />
                 Room Summary

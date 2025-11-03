@@ -67,7 +67,7 @@ function Message() {
 
   return (
     // FIX 1: Use min-h-screen and remove fixed height constraints (my-auto h-[90vh])
-    <div className="flex flex-col  bg-gray-100 antialiased p-0 sm:p-4 h-[90vh] overflow-hidden">
+    <div className="flex flex-col  bg-gray-100 antialiased p-0 sm:p-4 h-[88vh] overflow-hidden">
       
       {/* Chat Container - FIX 2: Full width/height on mobile, constrained on desktop */}
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full bg-white shadow-none sm:shadow-2xl sm:rounded-xl overflow-hidden h-full sm:min-h-[85vh]">

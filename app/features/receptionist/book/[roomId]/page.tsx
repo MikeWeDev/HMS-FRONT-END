@@ -92,15 +92,15 @@ export default function BookingPage() {
         <main className="flex justify-center items-start min-h-screen bg-gray-50 p-6">
             <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6">
                 
-                <h1 className="text-3xl font-bold text-gray-900 text-center flex items-center justify-center gap-3">
-                    <BedDouble className="w-8 h-8 text-blue-600" />
-                    Book Room: {roomData.name}
-                </h1>
+               <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center flex items-center justify-center gap-3 py-6">
+    Complete Your Reservation
+</h1>
 
-                <p className="text-center text-gray-600 border-b pb-4">
+
+               
+ <p className="text-center text-gray-600 border-b pb-4">
                     Review the room details and fill in the form below to confirm your booking.
                 </p>
-
                 {/* Pass the fully loaded roomData object to the form */}
                 <BookingForm room={roomData} />
 
