@@ -26,7 +26,7 @@ const NotificationBanner = ({ notification, setNotification }: {
   notification: NotificationState;
   setNotification: React.Dispatch<React.SetStateAction<NotificationState>>;
 }) => {
-  const bgColor = notification.type === 'error' ? 'bg-red-500' : 'bg-green-500';
+  const bgColor = notification.type === 'error' ? 'bg-red-500' : 'bg-blue-500';
   const Icon = notification.type === 'error' ? AlertCircle : CheckCircle;
 
   if (!notification.message) return null;
@@ -179,24 +179,24 @@ export default function StaffPage() {
       title: "Total Staff",
       count: totalStaff,
       icon: User,
-      color: "text-green-600", // Using green theme
-      bgColor: "bg-green-100",
+      color: "text-blue-600", // Using blue theme
+      bgColor: "bg-blue-100",
       description: "Count of all active staff accounts."
     },
     {
       title: "Administrators",
       count: admins,
       icon: Users,
-      color: "text-green-600",
-      bgColor: "bg-green-100",
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
       description: "Total number of admin accounts."
     },
     {
       title: "Receptionists",
       count: receptionists,
       icon: User,
-      color: "text-green-600",
-      bgColor: "bg-green-100",
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
       description: "Total number of receptionist accounts."
     },
   ];
@@ -205,7 +205,7 @@ export default function StaffPage() {
     <div className="bg-white shadow-xl rounded-2xl overflow-hidden mt-8 ring-1 ring-gray-100">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gradient-to-r from-green-700 to-green-600 text-white">
+          <thead className="bg-gradient-to-r from-blue-700 to-blue-600 text-white">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Username</th>
               <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Role</th>
@@ -217,10 +217,10 @@ export default function StaffPage() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {users.map((user, index) => (
-              <tr key={user._id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-green-50'} hover:bg-green-100 transition duration-150`}>
+              <tr key={user._id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-blue-50'} hover:bg-blue-100 transition duration-150`}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.username}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                     {user.role}
                   </span>
                 </td>
@@ -271,8 +271,8 @@ export default function StaffPage() {
       
       {/* Main Content Area: Now full width (w-full) */}
       <div className="w-full overflow-y-auto">
-         <header className="bg-white shadow-md p-4 sticky top-0 z-10 border-b border-green-100 w-full">
-        <h1 className="text-xl md:text-3xl font-extrabold text-green-800 tracking-tight">Stough Management Dashboard</h1>
+         <header className="bg-white shadow-md p-4 sticky top-0 z-10 border-b border-blue-100 w-full">
+        <h1 className="text-xl md:text-3xl font-extrabold text-blue-800 tracking-tight">Stough Management Dashboard</h1>
       </header>
 
         <main className="p-4  w-[90%] md:w-full mx-auto md:mx-0">
@@ -281,7 +281,7 @@ export default function StaffPage() {
             <button
               onClick={fetchUsers}
               disabled={loading || refreshing}
-              className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-200 disabled:bg-gray-400"
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:bg-blue-700 transition duration-200 disabled:bg-gray-400"
               aria-label="Refresh staff list"
             >
               {loading || refreshing ? (
@@ -296,8 +296,8 @@ export default function StaffPage() {
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {cardData.map((card, index) => (
-              <div key={index} className="bg-white border-b-4 border-green-500 rounded-xl shadow-xl p-6 flex flex-col items-start hover:shadow-2xl transition-all duration-300 transform hover:translate-y-[-2px]">
-                <div className="flex items-center gap-3 text-green-600">
+              <div key={index} className="bg-white border-b-4 border-blue-500 rounded-xl shadow-xl p-6 flex flex-col items-start hover:shadow-2xl transition-all duration-300 transform hover:translate-y-[-2px]">
+                <div className="flex items-center gap-3 text-blue-600">
                   <card.icon className={`w-8 h-8 p-1 rounded-full ${card.bgColor}`} />
                   <span className="text-4xl font-extrabold tracking-tight">{card.count}</span>
                 </div>
@@ -310,7 +310,7 @@ export default function StaffPage() {
           {/* Staff List Area */}
           {loading ? (
             <div className="flex items-center justify-center p-10 bg-white rounded-xl shadow-xl">
-              <Loader2 className="animate-spin w-8 h-8 text-green-500 mr-3" />
+              <Loader2 className="animate-spin w-8 h-8 text-blue-500 mr-3" />
               <p className="text-lg font-medium text-gray-600">Fetching staff data...</p>
             </div>
           ) : error ? (

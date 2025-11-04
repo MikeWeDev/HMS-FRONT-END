@@ -67,13 +67,13 @@ function Message() {
 
   return (
     // FIX 1: Use min-h-screen and remove fixed height constraints (my-auto h-[90vh])
-    <div className="flex flex-col  bg-gray-100 antialiased p-0 sm:p-4 h-[88vh] overflow-hidden">
+    <div className="flex flex-col  bg-gray-100 antialiased p-0 sm:p-4 mt-[10px] overflow-hidden">
       
       {/* Chat Container - FIX 2: Full width/height on mobile, constrained on desktop */}
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full bg-white shadow-none sm:shadow-2xl sm:rounded-xl overflow-hidden h-full sm:min-h-[85vh]">
         
         {/* Chat Header */}
-        <div className="bg-green-600 p-4 text-white text-xl font-bold shadow-lg flex items-center justify-between sticky top-0 z-10">
+        <div className="bg-blue-600 p-4 text-white text-xl font-bold shadow-lg flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-3   ">
             <MessageSquare className="w-6 h-6" />
             <span>Support Chat</span>

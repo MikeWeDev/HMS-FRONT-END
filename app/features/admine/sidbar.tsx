@@ -34,7 +34,7 @@ export default function ReceptionistSidebar({
   ];
 
     // Define the primary accent color class for Receptionist
-    const ACCENT_COLOR_CLASS = 'green'; // Use green for contrast with Guest blue
+    const ACCENT_COLOR_CLASS = 'blue'; // Use green for contrast with Guest blue
 
     return (
         <aside

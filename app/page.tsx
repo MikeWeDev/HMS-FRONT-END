@@ -135,14 +135,23 @@ export default function Home() {
 
             <div className="bg-white rounded-3xl shadow-2xl shadow-blue-200 p-8 sm:p-12 max-w-4xl w-full text-center border border-gray-100 transform transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-300/50">
                 
-                <header className="mb-10">
-                    <h1 className="text-5xl sm:text-6xl font-black text-gray-900 mb-2 tracking-tight">
-                        <span className="text-indigo-600">HMS</span> Access Portal 🛎️
-                    </h1>
-                    <p className="text-lg text-gray-500 mt-4">
-                        Securely log in or use the quick access options below.
-                    </p>
-                </header>
+               <header className="mb-10">
+  <h1 className="text-5xl sm:text-6xl font-black text-gray-900 mb-2 tracking-tight">
+    <span className="text-indigo-600">HMS</span> Access Portal 🛎️
+  </h1>
+
+  {/* Dynamic animated message */}
+  <p
+    className={`text-lg mt-4 transition-all duration-300 ${
+      isLoading 
+        ? "text-red-600 animate-pulse" 
+        : "text-gray-500"
+    }`}
+  >
+    ☁️ Running on a shared cloud — loading might take a few seconds
+  </p>
+</header>
+
 
                 <hr className="border-gray-200 mb-10" />
 

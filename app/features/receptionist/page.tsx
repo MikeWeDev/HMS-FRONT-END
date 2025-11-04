@@ -108,34 +108,45 @@ export default function ReceptionistDashboardPage() {
         </div>
 
         {/* Filter Section */}
-        <div className="mb-6 flex flex-wrap gap-3 items-center">
-          <span className="font-medium text-gray-700 mr-3">Filter by Status:</span>
+<div className="mb-6 flex items-center gap-4">
+  <label htmlFor="status-filter" className="font-medium text-gray-700">
+    Filter by Status:
+  </label>
 
-          {filterOptions.map((option) => {
-            const isActive = filterStatus === option;
-            return (
-              <button
-                key={option}
-                onClick={() => setFilterStatus(option)}
-                className={`px-4 py-2 rounded-lg border transition
-                  ${
-                    isActive
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                  }`}
-              >
-                {option}
-              </button>
-            );
-          })}
+  {/* NEW: Relative wrapper for the custom arrow */}
+  <div className="relative max-w-xs">
+    <select
+      id="status-filter"
+      value={filterStatus}
+      onChange={(e) => 
+        setFilterStatus(e.target.value as "Available" | "Booked" | "Checked-In" | "Checked-Out" | "All")
+      }
+      // Added pr-10 to make room for the custom arrow icon
+      className="appearance-none block w-full bg-white text-gray-800 border-1 border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 px-5 py-3 pr-10 rounded-xl leading-tight shadow-sm transition duration-200 ease-in-out cursor-pointer text-base font-medium"
+    >
+      {/* Map over filterOptions to create the dropdown options */}
+      {filterOptions.map((option) => (
+        <option key={option} value={option} className="text-gray-700">
+          {option}
+        </option>
+      ))}
+    </select>
+    
+    {/* Custom Dropdown Arrow Icon */}
+    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+      </svg>
+    </div>
+  </div>
 
-          <button
-            onClick={() => fetchRooms()}
-            className="ml-4 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-          >
-            Refresh
-          </button>
-        </div>
+  <button
+    onClick={() => fetchRooms()}
+    className="px-5 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300"
+  >
+    Refresh
+  </button>
+</div>
 
         {loading && (
           <div className="flex items-center gap-2 text-gray-600">

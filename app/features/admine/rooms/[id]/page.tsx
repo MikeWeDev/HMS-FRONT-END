@@ -197,120 +197,127 @@ export default function EditRoomPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans p-4 sm:p-8 flex justify-center">
-      <div className="w-full max-w-4xl">
-        {/* Header and Back Button */}
-        <div className="mb-8 flex items-center justify-between">
-            <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-                Room {room.roomNumber} Status Management
-            </h1>
-            <button
-                onClick={() => simpleRouter.push("/features/admine/rooms")}
-                className="flex items-center gap-1 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
-            >
-                <ArrowLeft className="w-4 h-4" /> Back to List
-            </button>
-        </div>
+   <div className="min-h-screen bg-gray-100 font-sans p-4 sm:p-8 flex justify-center">
+  <div className="w-full max-w-5xl">
+    {/* Header and Back Button */}
+    <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+        Room {room.roomNumber} Status Management
+      </h1>
+      <button
+        onClick={() => simpleRouter.push("/features/admine/rooms")}
+        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back to List
+      </button>
+    </div>
 
-        {/* Content Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Room Details Card (2/3 width on large screens) */}
-          <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-2xl border border-blue-100">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <BedDouble className="w-6 h-6 text-blue-600" /> Room Information
-            </h2>
+    {/* Content Area */}
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Room Details Card */}
+      <div className="lg:col-span-8 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <BedDouble className="w-6 h-6 text-blue-600" /> Room Information
+        </h2>
 
-            {/* Status Indicator */}
-            <div className="mb-6 p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg flex items-center justify-between">
-                <div className="text-lg font-medium text-blue-800">
-                    Current Status:
-                </div>
-                <span className={`px-4 py-2 rounded-full text-base font-bold uppercase border-2 shadow-md ${statusBadgeColor(room.status)}`}>
-                    {room.status}
-                </span>
-            </div>
+        {/* Status Indicator */}
+        <div className="mb-4 p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg flex items-center justify-between">
+          <div className="text-lg font-medium text-blue-800">Current Status:</div>
+          <span
+            className={`px-4 py-2 rounded-full text-base font-bold uppercase border ${statusBadgeColor(room.status)}`}
+          >
+            {room.status}
+          </span>
+        </div>
 
-            {/* Details Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <DetailItem icon={Tag} label="Room Type" value={room.type} />
-                <DetailItem icon={DollarSign} label="Price (Birr)" value={new Intl.NumberFormat('en-US').format(room.price)} />
-                <DetailItem icon={Users} label="Max Capacity" value={room.capacity} />
-            </div>
+        {/* Details Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <DetailItem icon={Tag} label="Room Type" value={room.type} />
+          <DetailItem
+            icon={DollarSign}
+            label="Price (Birr)"
+            value={new Intl.NumberFormat("en-US").format(room.price)}
+          />
+          <DetailItem icon={Users} label="Max Capacity" value={room.capacity} />
+        </div>
 
-            {/* Amenities */}
-            <div className="mt-6 border-t pt-4">
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Amenities</h3>
-                <div className="flex flex-wrap gap-2">
-                    {room.amenities.map((a, index) => (
-                        <span key={index} className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full font-medium">
-                            {a}
-                        </span>
-                    ))}
-                </div>
-            </div>
-          </div>
+        {/* Amenities */}
+        <div className="mt-6 border-t pt-4">
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Amenities</h3>
+          <div className="flex flex-wrap gap-2">
+            {room.amenities.map((a, idx) => (
+              <span
+                key={idx}
+                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full font-medium"
+              >
+                {a}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
 
-          {/* Status Update Form (1/3 width on large screens) */}
-          <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-2xl border border-blue-100">
-            
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <Settings className="w-6 h-6 text-blue-600" /> Update Status
-            </h2>
+      {/* Status Update Form */}
+      <div className="lg:col-span-4 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <Settings className="w-6 h-6 text-blue-600" /> Update Status
+        </h2>
 
-            {/* Message Area */}
-            {successMsg && (
-              <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-lg font-medium flex items-center gap-3 border border-green-400 animate-pulse">
-                <Check className="w-5 h-5" /> {successMsg}
-              </div>
-            )}
-            {error && (
-              <div className="mb-4 p-4 bg-red-100 text-red-800 rounded-lg font-medium flex items-center gap-3 border border-red-400">
-                <AlertCircle className="w-5 h-5" /> {error}
-              </div>
-            )}
+        {/* Message Area */}
+        {successMsg && (
+          <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-lg font-medium flex items-center gap-3 border border-green-400 animate-pulse">
+            <Check className="w-5 h-5" /> {successMsg}
+          </div>
+        )}
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 text-red-800 rounded-lg font-medium flex items-center gap-3 border border-red-400">
+            <AlertCircle className="w-5 h-5" /> {error}
+          </div>
+        )}
 
-            {/* Status Dropdown */}
-            <div className="mb-6  ">
-              <label className="block font-semibold mb-2 text-gray-700 flex items-center">
-                <Clock className="w-4 h-4 mr-2 text-gray-500" /> New Status
-              </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as Room["status"])}
-                className="w-full border-2 border-gray-300 rounded-xl px-4 border-4 border-green-600 py-3 text-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-inner appearance-none transition"
-              >
-                {statusOptions.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt} {opt === room.status ? "(Current)" : ""}
-                  </option>
-                ))}
-              </select>
-            </div>
+        {/* Status Dropdown */}
+        <div className="mb-6">
+          <label className="block font-semibold mb-2 text-gray-700 flex items-center gap-2">
+            <Clock className="w-4 h-4 text-gray-500" /> New Status
+          </label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as Room["status"])}
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition"
+          >
+            {statusOptions.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt} {opt === room.status ? "(Current)" : ""}
+              </option>
+            ))}
+          </select>
+        </div>
 
-            {/* Save Button */}
-            <button
-              onClick={handleSave}
-              // Disable if saving or if the status hasn't changed from the current room status
-              disabled={saving || status === room.status} 
-              className={`w-full flex justify-center items-center gap-2 px-4 py-3 rounded-xl text-white font-semibold text-lg transition duration-300 shadow-lg ${
-                saving || status === room.status
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5"
-              }`}
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="animate-spin w-5 h-5" /> Saving...
-                </>
-              ) : (
-                "Apply Status Change"
-              )}
-            </button>
-            <p className="text-xs text-gray-500 mt-2 text-center">Changes will be visible in the room inventory immediately.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+        {/* Save Button */}
+        <button
+          onClick={handleSave}
+          disabled={saving || status === room.status}
+          className={`w-full flex justify-center items-center gap-2 px-4 py-3 rounded-xl text-white font-semibold text-lg transition duration-300 shadow-lg ${
+            saving || status === room.status
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700 hover:shadow-md transform hover:-translate-y-0.5"
+          }`}
+        >
+          {saving ? (
+            <>
+              <Loader2 className="animate-spin w-5 h-5" /> Saving...
+            </>
+          ) : (
+            "Apply Status Change"
+          )}
+        </button>
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          Changes will be visible in the room inventory immediately.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
   );
 }

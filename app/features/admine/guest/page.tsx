@@ -173,7 +173,7 @@ export default function App() {
     <div className="bg-white shadow-xl rounded-2xl overflow-hidden mt-8 ring-1 ring-gray-100  w-full overflow-x-auto">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gradient-to-r from-green-700 to-green-600 text-white">
+          <thead className="bg-gradient-to-r from-blue-700 to-blue-600 text-white">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Username</th>
               <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Role</th>
@@ -188,7 +188,7 @@ export default function App() {
               <tr key={guest._id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-green-50'} hover:bg-green-100 transition duration-150`}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{guest.username}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                     {guest.role}
                   </span>
                 </td>
@@ -238,8 +238,8 @@ export default function App() {
         }}
       />
 
-      <header className="bg-white shadow-md p-4 sticky top-0 z-10 border-b border-green-100 w-full">
-        <h1 className="text-xl md:text-3xl font-extrabold text-green-800 tracking-tight">Guest Management Dashboard</h1>
+      <header className="bg-white shadow-md p-4 sticky top-0 z-10 border-b border-blue-100 w-full">
+        <h1 className="text-xl md:text-3xl font-extrabold text-blue-800 tracking-tight">Guest Management Dashboard</h1>
       </header>
 
       <main className="p-4  w-[90%] md:w-full mx-auto md:mx-0">
@@ -248,7 +248,7 @@ export default function App() {
           <button
             onClick={fetchGuests}
             disabled={loading || refreshing}
-            className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-200 disabled:bg-gray-400"
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition duration-200 disabled:bg-gray-400"
             aria-label="Refresh guest list"
           >
             {loading || refreshing ? (
@@ -263,10 +263,10 @@ export default function App() {
 
         {/* Summary Card - Responsive layout */}
         <div className="grid grid-cols-1 gap-6 mb-8">
-          <div className="bg-white border-b-4 border-green-500 rounded-xl shadow-xl p-6 flex flex-col items-start hover:shadow-2xl transition-all duration-300 transform hover:translate-y-[-2px]">
-            <div className="flex items-center gap-3 text-green-600">
+          <div className="bg-white border-b-4 border-blue-500 rounded-xl shadow-xl p-6 flex flex-col items-start hover:shadow-2xl transition-all duration-300 transform hover:translate-y-[-2px]">
+            <div className="flex items-center gap-3 text-blue-600">
               {/* Replaced HiOutlineUser with User */}
-              <User className="w-8 h-8 p-1 rounded-full bg-green-100" />
+              <User className="w-8 h-8 p-1 rounded-full bg-blue-100" />
               <span className="text-4xl font-extrabold tracking-tight">{totalGuests}</span>
             </div>
             <span className="text-gray-600 mt-3 text-lg font-medium">Total Registered Guests</span>

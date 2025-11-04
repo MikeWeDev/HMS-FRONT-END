@@ -119,112 +119,103 @@ if (!room)
   );
 
 return (
-// Header Image Focus Layout (Full-Width Header and Stacked Content)
-<div className="min-h-screen bg-gray-900 text-white">
-
-  {/* 1. Full-Width Header Image Section */}
-  <div className="relative h-[60vh] md:h-[80vh] overflow-hidden shadow-2xl">
-    
-    {/* Image Container */}
-    <img
-      src={room.image}
-      alt={room.name}
-      // Key Change: object-cover for full background visual impact
-      className="w-full h-full object-cover transition-all duration-700 ease-in-out brightness-75"
-    />
-    
-    {/* Gradient for Text Readability and Style */}
-    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent pointer-events-none"></div>
-
-    {/* Header Content - Centered */}
-    <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 max-w-7xl mx-auto">
-      <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight drop-shadow-lg leading-tight text-white">
-        {room.name}
-      </h1>
-      <p className="mt-4 text-2xl font-light text-indigo-300 max-w-3xl">
-        {room.description}
-      </p>
-    </div>
-    
-  </div>
-
-  {/* 2. Main Content Section - Stacked Cards */}
-  <div className="max-w-7xl mx-auto -mt-16 relative z-10 px-4 md:px-8 pb-12">
-    
-    {/* Top Row: Price/Status Card & Action Button */}
-    <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 gap-4 md:mb-8 mb-2">
-      
-      {/* Price & Status Card (Left 2/3) */}
-     <div className="md:col-span-2 bg-gray-800 p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center border-l-8 border-indigo-500 gap-4">
+<div className="min-h-screen bg-gray-900 text-white font-sans">
+  
+  <div className="relative h-72 sm:h-[60vh] lg:h-[80vh] overflow-hidden shadow-2xl">
     
-    {/* Price Section */}
-    <div className="text-left">
-        <span className="text-sm sm:text-lg font-medium text-gray-400 block">Current Price</span>
-        <span className="text-2xl sm:text-4xl font-extrabold text-green-400">${room.price} / night</span>
-    </div>
+   
+    <img
+      src={room.image}
+      alt={room.name}
+      className="w-full h-full object-cover transition-all duration-700 ease-in-out brightness-75"
+    />
+    
+    {/* Gradient for Text Readability and Style */}
+    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent pointer-events-none"></div>
 
-    {/* Status Section */}
-    <div className="text-left sm:text-right">
-        <span className="text-sm sm:text-lg font-medium text-gray-400 block">Current Status</span>
-        <span className={`mt-1 inline-block px-3 py-1 sm:px-5 sm:py-2 rounded-lg font-extrabold text-base sm:text-lg shadow-md ${statusColors[room.status]}`}>
+  
+    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-12 max-w-7xl xl:max-w-8xl mx-auto">
+      <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tight drop-shadow-lg leading-snug text-white">
+        {room.name}
+      </h1>
+      <p className="mt-3 sm:mt-4 text-xl sm:text-2xl font-light text-indigo-300 max-w-4xl">
+        {room.description}
+      </p>
+    </div>
+    
+  </div>
+
+
+  <div className="max-w-7xl xl:max-w-8xl mx-auto -mt-12 sm:-mt-16 relative z-10 px-4 sm:px-6 lg:px-8 pb-12">
+    
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mb-6 md:mb-8">
+      
+      <div className="lg:col-span-2 bg-gray-800 p-5 sm:p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row justify-start sm:justify-between items-stretch sm:items-center border-l-8 border-indigo-500 gap-4 sm:gap-6">
+    
+        <div className="text-left">
+          <span className="text-sm font-medium text-gray-400 block">Current Price</span>
+          <span className="text-2xl sm:text-3xl lg:text-5xl font-extrabold text-green-400">${room.price} / night</span>
+        </div>
+
+        <div className="text-left sm:text-right w-full sm:w-auto">
+          <span className="text-sm font-medium text-gray-400 block">Current Status</span>
+          <span className={`mt-1 inline-block w-full sm:w-auto text-center px-4 py-2 rounded-xl font-extrabold text-base sm:text-lg shadow-md ${statusColors[room.status]}`}>
             {room.status}
-        </span>
-    </div>
-</div>
-
-      {/* Action Button (Right 1/3) */}
-      <div className="md:col-span-1">
-    {success ? (
-      <div className="w-full h-auto py-4 sm:h-full text-center bg-green-900/50 rounded-2xl flex items-center justify-center transition-all duration-300">
-        <p className="text-xl sm:text-2xl text-green-400 font-extrabold p-2">
-          ✅ Confirmed!
-        </p>
+          </span>
+        </div>
       </div>
-    ) : (
-      <button
-        onClick={handleCheckIn}
-        // KEY CHANGE: Removed h-full on mobile, added specific py-3/4 for button height
-        className="w-full px-8 py-5 sm:py-4 bg-red-600 text-white rounded-2xl font-extrabold uppercase tracking-wider text-base sm:text-lg shadow-2xl shadow-red-500/50 
-                 hover:bg-red-500 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50"
-      >
-        Process Check-In
-      </button>
-    )}
-</div>
 
-    </div>
-    
+      <div className="lg:col-span-1">
+        {success ? (
+          <div className="w-full h-full py-4 sm:py-6 text-center bg-green-900/50 rounded-2xl flex items-center justify-center transition-all duration-300">
+            {/* Adjusted font size to scale better */}
+            <p className="text-xl md:text-2xl text-green-400 font-extrabold p-2">
+              ✅ Confirmed!
+            </p>
+          </div>
+        ) : (
+          <button
+            onClick={handleCheckIn}
+            className="w-full px-8 py-4 sm:py-5 bg-red-600 text-white rounded-2xl font-extrabold uppercase tracking-wider text-lg sm:text-xl shadow-2xl shadow-red-500/50 
+                    hover:bg-red-500 transform hover:scale-[1.02] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 h-full"
+          >
+            Process Check-In
+          </button>
+        )}
+      </div>
 
-
-    {/* Room Details Panel */}
-    <div className="bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-xl border-t-4 border-indigo-500">
-    <h2 className="text-2xl sm:text-3xl font-extrabold mb-4 sm:mb-6 border-b border-gray-700 pb-2 sm:pb-3 text-indigo-400">
-        Key Room Attributes
-    </h2>
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-        
-        {/* Room Type */}
-        <div className="flex flex-col">
-            <span className="text-xs sm:text-sm font-medium text-gray-400">Type</span>
-            <span className="text-base sm:text-xl font-bold">{room.type}</span>
-        </div>
-        
-        {/* Max Capacity */}
-        <div className="flex flex-col">
-            <span className="text-xs sm:text-sm font-medium text-gray-400">Capacity</span>
-            <span className="text-base sm:text-xl font-bold">{room.capacity} Guests</span>
-        </div>
-
-        {/* Notes/Long Description */}
-        <div  className="flex flex-col col-span-2 sm:col-span-4 mt-2 sm:mt-4">
-            <span className="text-xs sm:text-sm font-medium text-gray-400">Room Overview</span>
-            <p className="text-sm sm:text-base text-gray-300 leading-relaxed">This premium room includes a complimentary breakfast and access to the executive lounge. It is situated on the 10th floor, offering a stunning panoramic view of the city skyline. Perfect for business travelers or couples seeking a luxurious escape.</p>
-        </div>
-        
     </div>
+    
+   
+
+    <div className="bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-xl border-t-4 border-indigo-500">
+      <h2 className="text-xl sm:text-3xl font-extrabold mb-4 sm:mb-6 border-b border-gray-700 pb-2 sm:pb-3 text-indigo-400">
+        Key Room Attributes
+      </h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 md:gap-x-8">
+          
+        <div className="flex flex-col">
+          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Type</span>
+          <span className="text-base sm:text-xl font-bold mt-1">{room.type}</span>
+        </div>
+        
+        <div className="flex flex-col">
+          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Capacity</span>
+          <span className="text-base sm:text-xl font-bold mt-1">{room.capacity} Guests</span>
+        </div>
+
+        <div className="flex flex-col col-span-2 md:col-span-4 mt-2 sm:mt-4">
+          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Room Overview</span>
+          <p className="text-sm sm:text-base text-gray-300 leading-relaxed mt-1">
+            This premium room includes a complimentary breakfast and access to the executive lounge. It is situated on the 10th floor, offering a stunning panoramic view of the city skyline. Perfect for business travelers or couples seeking a luxurious escape.
+          </p>
+        </div>
+        
+      </div>
+    </div>
+
+  </div>
 </div>
 
-  </div>
-</div>
 );
 }
