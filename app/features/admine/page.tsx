@@ -82,7 +82,7 @@ export default function AdminPage() {
       const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
       if (!res.ok) throw new Error("Failed to fetch rooms");
 
-      const data: any[] = await res.json(); // Use any for raw fetch data
+      const data: Room[] = await res.json(); // Use any for raw fetch data
 
       const mappedRooms: Room[] = data.map((room) => ({
         _id: room._id,
