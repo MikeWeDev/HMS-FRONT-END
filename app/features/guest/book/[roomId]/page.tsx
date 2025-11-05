@@ -5,7 +5,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import BookingForm, { RoomDetails } from "@/app/components/BookingForm"; // Import RoomDetails
-import { Loader2 } from "lucide-react";
 
 // Define the interface for the raw data from the API (if needed)
 interface RawRoomData {

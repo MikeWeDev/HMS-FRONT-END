@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, ChangeEvent } from "react";
 import RoomCard from "../../components/RoomCard";
-import { BedDouble, Loader2 ,Filter} from "lucide-react";
+import { BedDouble ,Filter} from "lucide-react";
 
 // --- Price Range Definitions ---
 interface PriceRange {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User as UserIcon, Mail, Phone, Gem, History, Loader2, Edit3, BedDouble, AlertTriangle, Calendar, DollarSign, ArrowRight } from 'lucide-react';
+import { User as UserIcon, Mail, Phone, Gem, History, Edit3, BedDouble, AlertTriangle, Calendar, DollarSign, ArrowRight } from 'lucide-react';
 import Link from "next/link";
 
 // --- INTERFACES (Remain the same) ---

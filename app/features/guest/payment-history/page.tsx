@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { CreditCard, Calendar, TrendingUp, RefreshCw, Loader2, AlertTriangle } from 'lucide-react';
+import { CreditCard, Calendar, TrendingUp, RefreshCw, AlertTriangle } from 'lucide-react';
 
 // Define the interface based on the simplified data returned by the backend:
 // Booking data mapped as a transaction record.
