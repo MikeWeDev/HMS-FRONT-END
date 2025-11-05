@@ -72,15 +72,17 @@ export default function EditBookingPage() {
                 let checkInDate = defaultDate;
                 if (bookingData.checkIn) {
                     try {
+                        // FIX 1: Renamed unused catch parameter from '_' to '_e' to suppress linter error
                         checkInDate = new Date(bookingData.checkIn).toISOString().split('T')[0];
-                    } catch (_) {} 
+                    } catch (_e) {} 
                 }
                 
                 let checkOutDate = defaultDate;
                 if (bookingData.checkOut) {
                     try {
+                        // FIX 2: Renamed unused catch parameter from '_' to '_e' to suppress linter error
                         checkOutDate = new Date(bookingData.checkOut).toISOString().split('T')[0];
-                    } catch (_) {} 
+                    } catch (_e) {} 
                 }
                 
                 
@@ -133,7 +135,8 @@ export default function EditBookingPage() {
         }
 
         try {
-            const { room: ignoredRoom, ...dataToSend } = formData; 
+            // FIX 3: Renamed 'ignoredRoom' to '_' to avoid 'unused variable' error
+            const { room: _, ...dataToSend } = formData; 
             const updatePayload: any = {
                 ...dataToSend, 
                 user: userId,
