@@ -4,6 +4,7 @@ import { useState } from "react";
 import GustSidebar from "./Sidebar"; // Assuming this is the GuestSidebar component
 import { Menu, X } from "lucide-react";
 
+
 export default function GuestLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -16,7 +17,7 @@ export default function GuestLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex flex-col md:flex-row min-h-screen relative">
       {/* --- Mobile Navbar --- */}
-      <header className="md:hidden flex items-center justify-between bg-white shadow px-4 py-3 sticky top-0 z-20">
+      <header className="md:hidden flex items-center h-[10vh] justify-between bg-white shadow px-4 py-3 sticky top-0 z-20">
         <div className="text-lg font-semibold text-gray-800">Royal Stay Hotel</div>
         <button
           onClick={toggleSidebar}

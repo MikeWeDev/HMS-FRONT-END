@@ -169,15 +169,17 @@ const GuestProfilePage = () => {
     
     
 
-    if (isLoading) {
-        return (
-            // Removed min-h-screen here as parent layout should manage it
-            <div className="flex justify-center items-center h-full w-full bg-gray-50 p-12">
-                <Loader2 className="animate-spin text-blue-600 h-8 w-8 mr-3" />
-                <span className="text-xl text-gray-600">Loading Profile...</span>
-            </div>
-        );
-    }
+     if (isLoading)
+  return (
+    // Loading Screen: Minimalist and centered with a clear spinner or animation (represented by text here)
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-indigo-500 text-2xl font-light">
+      <svg className="animate-spin -ml-1 mr-3 h-10 w-10 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p className="mt-4">Loading Profile Data...</p>
+    </div>
+  );
 
     if (error || !profileData) {
         return (
@@ -200,18 +202,18 @@ const GuestProfilePage = () => {
     return (
         // 💡 FIX APPLIED: Removed 'min-h-screen' to stop the page content from forcing the entire layout (and sidebar) to stretch.
         // The outer Layout component should manage the screen height.
-        <div className="flex flex-col bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto w-full">
+        <div className="flex flex-col bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 w-[90vw] md:w-full mx-auto">
+            <div className="max-w-6xl mx-auto w-full">
                 
                 {/* Header Section */}
                 <header className="text-center mb-12 bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-600">
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600 shadow-md">
                         <UserIcon size={32} strokeWidth={2.5}/>
                     </div>
-                    <h1 className="mt-4 text-4xl font-extrabold text-gray-900 tracking-tight">
+                    <h1 className="mt-4 md:text-4xl  sm:text-2xl  font-extrabold text-gray-900 tracking-tight">
                         Welcome, <span className='text-blue-600'>{user.name.split(' ')[0]}</span>!
                     </h1>
-                    <p className="mt-2 text-xl text-gray-500">Your Guest Dashboard</p>
+                    <p className="mt-2 text-md text-gray-500">Your Guest Dashboard</p>
                 </header>
 
                 {/* Main Content Grid */}
@@ -227,7 +229,7 @@ const GuestProfilePage = () => {
                                     href="/features/guest/editInfo" 
                                     className="text-sm font-medium text-blue-600 hover:text-blue-800 transition duration-150 flex items-center p-2 rounded-lg bg-blue-50 hover:bg-blue-100"
                                 >
-                                    <Edit3 className="h-4 w-4 mr-1" /> Edit Profile
+                                    <Edit3 className="h-3 w-3 mr-1" /> Edit Profile
                                 </Link>
                             </div>
 

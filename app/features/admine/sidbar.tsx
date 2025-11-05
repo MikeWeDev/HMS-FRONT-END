@@ -8,6 +8,7 @@ import {
     User,
     ClipboardList,
     MessageCircle,
+    Settings,
     LogOut,
 } from 'lucide-react';
 
@@ -25,13 +26,13 @@ export default function ReceptionistSidebar({
     notifications = {},
     onLinkClick,
 }: ReceptionistSidebarProps) {
-   const links = [
+    const links = [
     { href: "/features/admine", label: "Dashboard", icon: LayoutDashboard },
     { href: "/features/admine/guest", label: "All Guests", icon: User },
     { href: "/features/admine/stough", label: "All Staff", icon: ClipboardList },
     { href: "/features/admine/rooms", label: "Edit Rooms", icon: CalendarDays },
     { href: "/features/admine/message", label: "Messages", icon: MessageCircle },
-  ];
+    ];
 
     // Define the primary accent color class for Receptionist
     const ACCENT_COLOR_CLASS = 'blue'; // Use green for contrast with Guest blue
@@ -39,7 +40,7 @@ export default function ReceptionistSidebar({
     return (
         <aside
             className={`${isMobile ? 'fixed inset-y-0 left-0 z-50 flex' : 'hidden md:sticky md:top-0 md:flex'} 
-                w-80 bg-gray-50 p-6 flex-col justify-between `}
+                w-80 bg-gray-50 p-6 flex-col justify-between shadow-2xl`}
         >
             {/* Top Profile Card */}
             <div className="mb-10">
@@ -47,7 +48,7 @@ export default function ReceptionistSidebar({
                     <Building2 className={`w-10 h-10 text-${ACCENT_COLOR_CLASS}-600`} />
                     <div>
                         <h1 className="text-lg font-semibold text-gray-900">Royal Stay Hotel</h1>
-                        <p className="text-sm text-gray-500">Reception Panel</p>
+                        <p className="text-sm text-gray-500">Admine Panel</p>
                     </div>
                 </div>
             </div>

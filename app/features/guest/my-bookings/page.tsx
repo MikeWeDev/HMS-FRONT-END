@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { FaTrashAlt } from "react-icons/fa"; // ❌ Removed FaEdit import
+import { useSearchParams, useRouter } from "next/navigation"; // 🔑 Import useRouter
+import { FaTrashAlt, FaEdit } from "react-icons/fa"; // 🔑 Import FaEdit
 
 interface Room {
     _id: string;
@@ -28,9 +28,10 @@ function MyBookingsContent() {
     const [error, setError] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
     const searchParams = useSearchParams();
-    // ❌ Removed: const [editIndex, setEditIndex] = useState<number>(-1);
+    const router = useRouter(); // 🔑 Initialize router for redirection
 
     const fetchBookings = useCallback(async () => {
+        // ... (existing fetchBookings logic remains the same)
         setLoading(true);
         setError("");
         
@@ -87,7 +88,7 @@ function MyBookingsContent() {
 
     useEffect(() => {
         fetchBookings();
-
+        // ... (existing useEffect logic remains the same)
         if (searchParams.get("success") === "1") {
             setSuccessMsg("✅ Booking confirmed!");
             const timeout = setTimeout(() => setSuccessMsg(""), 3000);
@@ -98,9 +99,20 @@ function MyBookingsContent() {
 
             return () => clearTimeout(timeout);
         }
+        if (searchParams.get("editSuccess") === "1") { // 🔑 Handle edit success message
+             setSuccessMsg("✅ Booking updated successfully!");
+             const timeout = setTimeout(() => setSuccessMsg(""), 3000);
+ 
+             const url = new URL(window.location.href);
+             url.searchParams.delete("editSuccess");
+             window.history.replaceState(null, "", url.toString());
+ 
+             return () => clearTimeout(timeout);
+         }
     }, [searchParams, fetchBookings]);
 
     async function deleteBooking(index: number) {
+        // ... (existing deleteBooking logic remains the same)
         const bookingToDelete = bookings[index];
 
         try {
@@ -118,7 +130,6 @@ function MyBookingsContent() {
             updated.splice(index, 1);
             setBookings(updated);
 
-            // ❌ Removed: if (editIndex === index) setEditIndex(-1);
             setSuccessMsg("❌ Booking successfully canceled.");
 
         } catch (err: unknown) {
@@ -128,12 +139,28 @@ function MyBookingsContent() {
         }
     }
 
-    // ❌ Removed: function startEditing(index: number) { setEditIndex(index); }
+    // 🔑 New function to redirect to the edit page
+    function redirectToEdit(bookingId: string) {
+        router.push(`/features/guest/my-bookings/edit/${bookingId}`); 
+    }
 
     function formatDate(dateStr: string) {
         const date = new Date(dateStr);
         return `${date.toLocaleString("default", { month: "short" })} ${date.getDate()}, ${date.getFullYear()}`;
     }
+
+    if (loading)
+  return (
+    // Loading Screen: Minimalist and centered with a clear spinner or animation (represented by text here)
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-indigo-500 text-2xl font-light">
+      <svg className="animate-spin -ml-1 mr-3 h-10 w-10 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p className="mt-4">Fetching  room details...</p>
+    </div>
+  );
+
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
@@ -146,11 +173,6 @@ function MyBookingsContent() {
                     </div>
                 )}
                 {error && <p className="text-red-600 bg-red-50 p-3 rounded-md text-center font-medium">{error}</p>}
-
-
-                {loading && (
-                    <p className="text-gray-600 text-center animate-pulse">Loading bookings...</p>
-                )}
                 
                 {!loading && !error && bookings.length === 0 && (
                     <p className="text-gray-600 text-center font-medium">No bookings yet.</p>
@@ -173,7 +195,6 @@ function MyBookingsContent() {
                                 </div>
 
                                 <div className="p-5 flex flex-col gap-2">
-                                    {/* ❌ Removed: Conditional Rendering based on editIndex */}
                                     
                                     <>
                                         <h2 className="text-lg font-semibold text-gray-900">
@@ -185,9 +206,15 @@ function MyBookingsContent() {
                                             Dates: {formatDate(booking.checkIn)} → {formatDate(booking.checkOut)}
                                         </p>
 
-                                        {/* Action Buttons: Only the Delete button remains */}
-                                        <div className="flex justify-start mt-4 pt-3 border-t border-gray-100">
-                                            {/* ❌ Removed: Edit button code block */}
+                                        {/* 🔑 Add Edit Button */}
+                                        <div className="flex justify-start gap-3 mt-4 pt-3 border-t border-gray-100">
+                                            <button
+                                                onClick={() => redirectToEdit(booking._id)} // 🔑 Call new redirect function
+                                                className="bg-blue-600 hover:bg-blue-700 text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-md group relative"
+                                                title="Edit Booking"
+                                            >
+                                                <FaEdit className="w-4 h-4" />
+                                            </button>
                                             <button
                                                 onClick={() => deleteBooking(index)}
                                                 className="bg-red-600 hover:bg-red-700 text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-md group relative"

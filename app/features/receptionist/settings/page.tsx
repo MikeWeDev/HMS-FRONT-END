@@ -139,7 +139,7 @@ const ReceptionistSettingsPage = () => {
                             checked={settings.notificationsEnabled}
                             onChange={handleChange}
                             // Custom toggle styling
-                            className="h-6 w-12 appearance-none rounded-full bg-gray-300 dark:bg-gray-600 checked:bg-blue-600 transition duration-300 ease-in-out cursor-pointer relative after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:shadow-md after:transition after:translate-x-0 checked:after:translate-x-6"
+                            className="h-6 w-12 appearance-none text-black rounded-full bg-gray-300 dark:bg-gray-600 checked:bg-blue-600 transition duration-300 ease-in-out cursor-pointer relative after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:shadow-md after:transition after:translate-x-0 checked:after:translate-x-6"
                         />
                     </SettingItem>
 

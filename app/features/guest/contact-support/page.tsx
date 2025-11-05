@@ -12,32 +12,17 @@ interface Message {
 
 // Main ChatApp component
 function ContactSupport() {
+  // Messages are now only stored in state, starting empty.
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // --- Local Storage & Scroll Effects (Kept for functionality) ---
+  // --- Initial Load & Persistence Logic Removed ---
+  // The two useEffect blocks related to localStorage are removed.
+  // The chat state is now ephemeral (only exists in memory).
 
-  useEffect(() => {
-    try {
-      const storedMessages = localStorage.getItem('chatMessages');
-      if (storedMessages) {
-        setMessages(JSON.parse(storedMessages));
-      }
-    } catch (error) {
-      console.error("Failed to load messages from local storage:", error);
-      localStorage.removeItem('chatMessages');
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('chatMessages', JSON.stringify(messages));
-    } catch (error) {
-      console.error("Failed to save messages to local storage:", error);
-    }
-  }, [messages]);
-
+  // --- Scroll Effect (Kept) ---
+  // Scrolls to the bottom whenever messages change.
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -55,6 +40,17 @@ function ContactSupport() {
       };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
       setInputText('');
+
+      // Optional: Simulate an AI/Support response (for demo purposes)
+      setTimeout(() => {
+        const responseMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          text: "Thank you for your message. A support agent will be with you shortly.",
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isUser: false,
+        };
+        setMessages((prevMessages) => [...prevMessages, responseMessage]);
+      }, 1000);
     }
   };
 
@@ -63,14 +59,13 @@ function ContactSupport() {
     console.log('Message deleted successfully!');
   };
 
-  // --- UI Rendering (Enhanced) ---
+  // --- UI Rendering ---
 
   return (
-    // FIX 1: Use min-h-screen and remove fixed height constraints (my-auto h-[90vh])
-    <div className="flex flex-col  bg-gray-100 antialiased p-0 sm:p-4 h-[90vh] overflow-hidden">
+    <div className="flex flex-col bg-gray-100 antialiased p-0 sm:p-4 h-[90vh] overflow-hidden">
       
-      {/* Chat Container - FIX 2: Full width/height on mobile, constrained on desktop */}
-      <div className="flex-1 flex flex-col max-w-xl mx-auto w-full bg-white shadow-none sm:shadow-2xl sm:rounded-xl overflow-hidden h-full sm:min-h-[85vh]">
+      {/* Chat Container */}
+      <div className="flex-1 flex flex-col max-w-xl mx-auto w-full bg-white shadow-none sm:shadow-2xl sm:rounded-xl overflow-hidden h-full sm:min-h-[85vh] transition-all duration-300">
         
         {/* Chat Header */}
         <div className="bg-gradient-to-r from-blue-600 to-cyan-500 p-4 text-white text-xl font-bold shadow-lg flex items-center justify-between sticky top-0 z-10">
@@ -78,15 +73,13 @@ function ContactSupport() {
             <MessageSquare className="w-6 h-6" />
             <span>Support Chat</span>
           </div>
-          <span className="text-sm font-light opacity-80 hidden sm:block">Live Assistance</span>
         </div>
 
         {/* Messages Display Area */}
-        {/* FIX 3: Increased padding and slightly tighter spacing (space-y-2) for phone view */}
         <div className="flex-1 p-4 sm:p-6 overflow-y-auto custom-scrollbar flex flex-col space-y-2">
           {messages.length === 0 ? (
-            <div className="text-center text-gray-500 mt-8 p-4 bg-gray-50 rounded-lg">
-              Welcome! How can we assist you with your booking or stay?
+            <div className="text-center text-gray-500 mt-8 p-4 bg-gray-50 rounded-xl shadow-inner">
+              Welcome!
             </div>
           ) : (
             messages.map((message) => (
@@ -96,13 +89,14 @@ function ContactSupport() {
               >
                 {/* Message Bubble */}
                 <div
-                  className={`relative max-w-[85%] sm:max-w-[70%] p-3 rounded-2xl shadow-md text-sm transition-all duration-200 ${
-                    message.isUser
-                      // User message styles
-                      ? 'bg-blue-600 text-white rounded-br-md ml-auto'
-                      // AI/Support message styles
-                      : 'bg-gray-200 text-gray-800 rounded-tl-md mr-auto'
-                  }`}
+                  className={`relative max-w-[85%] sm:max-w-[70%] p-3 rounded-2xl shadow-lg text-sm transition-all duration-200 
+                    ${
+                      message.isUser
+                        // User message styles
+                        ? 'bg-blue-600 text-white rounded-br-md ml-auto'
+                        // AI/Support message styles
+                        : 'bg-gray-200 text-gray-800 rounded-tl-md mr-auto'
+                    }`}
                 >
                   <p className="break-words mb-1">{message.text}</p>
                   
@@ -117,6 +111,7 @@ function ContactSupport() {
                       onClick={() => handleDeleteMessage(message.id)}
                       className={`text-red-300 hover:text-red-500 transition-opacity p-0.5 opacity-0 group-hover:opacity-100 group-focus:opacity-100 ${message.isUser ? 'text-blue-300 hover:text-red-400' : 'text-gray-400 hover:text-red-500'}`}
                       title="Delete message"
+                      aria-label="Delete message"
                     >
                       <Trash2 className="w-3 h-3" />
                     </button>
@@ -136,7 +131,6 @@ function ContactSupport() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Type your question or request..."
-            // FIX 4: Sleeker input style
             className="flex-1 p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-100 text-base transition-shadow"
           />
           <button
@@ -150,9 +144,8 @@ function ContactSupport() {
         </form>
       </div>
 
-      {/* Optional: Add custom scrollbar styling if needed (requires global styles or next.config.js setup) */}
+      {/* Custom Scrollbar Styling (Inline) */}
       <style jsx global>{`
-        /* Minimal custom scrollbar for better appearance */
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }

@@ -1,11 +1,12 @@
 @import "tailwindcss";
+@import 'nprogress/nprogress.css';
 
 :root {
+  /* --- Default Light Mode Variables --- */
   --background: #ffffff;
   --foreground: #171717;
-}
 
-@theme inline {
+  /* --- Variables previously inside @theme inline --- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -14,10 +15,21 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    /* --- Dark Mode Variables --- */
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
+
+/* --- Global nprogress styling (Optional but recommended) --- */
+/* Set a high z-index to ensure the progress bar is always visible */
+#nprogress .bar {
+  z-index: 10000 !important; 
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px #3b82f6, 0 0 5px #3b82f6;
+}
+
 
 body {
   background: var(--background);
