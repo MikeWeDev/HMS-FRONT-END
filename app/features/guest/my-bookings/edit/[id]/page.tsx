@@ -62,15 +62,16 @@ export default function EditBookingPage() {
                 if (bookingData.checkIn) {
                     try {
                         checkInDate = new Date(bookingData.checkIn).toISOString().split('T')[0];
-                    } catch (e) { /* warn */ }
+                    } catch (_e) {}
                 }
                 
                 let checkOutDate = defaultDate;
                 if (bookingData.checkOut) {
                     try {
                         checkOutDate = new Date(bookingData.checkOut).toISOString().split('T')[0];
-                    } catch (e) { /* warn */ }
+                    } catch (_e) {}
                 }
+            
                 
                 const newFormData = {
                     name: bookingData.name,
@@ -119,7 +120,7 @@ export default function EditBookingPage() {
         }
 
         try {
-            const { room, ...dataToSend } = formData;
+            const { room:_, ...dataToSend } = formData;
             const updatePayload: any = {
                 ...dataToSend, 
                 user: userId,
@@ -181,7 +182,7 @@ export default function EditBookingPage() {
     };
 
     const getButtonClass = () => {
-        let baseClass = "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white disabled:opacity-50";
+        const baseClass = "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white disabled:opacity-50";
         
         if (isSuccess) {
             return `${baseClass} bg-green-500 hover:bg-green-600 focus:ring-green-500`;
