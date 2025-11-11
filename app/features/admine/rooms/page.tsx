@@ -73,47 +73,6 @@ const NotificationBanner = ({ notification, setNotification }: {
   );
 };
 
-
-// --- Mock Data Generator (Generates 30 rooms for realistic testing) ---
-
-const generateMockRooms = (count: number): Room[] => {
-  const types = ["Standard Double", "Deluxe Suite", "Single Economy", "Family Room", "Executive Suite"];
-  const amenitiesPool = ["WiFi", "TV", "King Bed", "Mini Bar", "Shower", "Private Balcony", "Jacuzzi"];
-  const statuses = ["Available", "Booked", "Checked-In", "Checked-Out"];
-
-  return Array.from({ length: count }, (_, i) => {
-    const type = types[i % types.length];
-    const status = statuses[i % statuses.length];
-    
-    // Assign reasonable price and capacity based on type
-    let price = 0;
-    let capacity = 0;
-    let amenities: string[] = [];
-
-    switch (type) {
-      case "Standard Double": price = 1200 + i * 10; capacity = 2; amenities = amenitiesPool.slice(0, 3); break;
-      case "Deluxe Suite": price = 3500 + i * 20; capacity = 4; amenities = amenitiesPool.slice(0, 5); break;
-      case "Single Economy": price = 800 + i * 5; capacity = 1; amenities = amenitiesPool.slice(0, 1); break;
-      case "Family Room": price = 2500 + i * 15; capacity = 5; amenities = amenitiesPool.slice(0, 4); break;
-      case "Executive Suite": price = 5000 + i * 25; capacity = 3; amenities = amenitiesPool.slice(0, 6); break;
-    }
-
-    return {
-      _id: `r${i + 1}`,
-      // Use different room number logic to ensure uniqueness, e.g., floors 1-3
-      roomNumber: `${101 + i}`,
-      type,
-      price: Math.round(price / 100) * 100, // Round to nearest 100
-      capacity,
-      amenities,
-      status: status as Room["status"],
-    };
-  });
-};
-
-
-// --- Main Component ---
-
 export default function AdminRoomsPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
@@ -129,21 +88,11 @@ export default function AdminRoomsPage() {
     setError(null);
     try {
       // If your external API is running, uncomment the lines below and comment out the mock data section.
-      /*
+      
       const res = await fetch("https://hms-backend-2k1m.onrender.com/api/rooms");
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       setRooms(data);
-      */
-      
-      // --- MOCK DATA FOR DISPLAY (GENERATES 30 ROOMS) ---
-      const mockData = generateMockRooms(30); 
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500)); 
-      
-      setRooms(mockData);
-      // --- END MOCK DATA ---
 
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred.";

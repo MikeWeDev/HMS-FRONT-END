@@ -159,7 +159,7 @@ export default function BookingForm({ room }: BookingFormProps) {
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full border border-gray-300 rounded-xl pt-6 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm"
+                            className="w-full border  text-black border-gray-300 rounded-xl pt-6 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm"
                             placeholder=""
                             required
                             disabled={loading}
@@ -182,7 +182,7 @@ export default function BookingForm({ room }: BookingFormProps) {
                             required
                             disabled={loading}
                         />
-                        <Users className="w-4 h-4 text-gray-400 absolute right-4 top-1/2 transform -translate-y-1/2 mt-1 pointer-events-none" />
+                        <Users className="w-4 h-4 text-black absolute right-4 top-1/2 transform -translate-y-1/2 mt-1 pointer-events-none" />
                     </div>
                 </div>
 
@@ -195,7 +195,7 @@ export default function BookingForm({ room }: BookingFormProps) {
                             id="checkin"
                             value={checkin}
                             onChange={(e) => setCheckin(e.target.value)}
-                            className="w-full border border-gray-300 rounded-xl pt-6 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm"
+                            className="w-full border text-black  border-gray-300 rounded-xl pt-6 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm"
                             required
                             disabled={loading}
                         />
@@ -207,7 +207,7 @@ export default function BookingForm({ room }: BookingFormProps) {
                             id="checkout"
                             value={checkout}
                             onChange={(e) => setCheckout(e.target.value)}
-                            className="w-full border border-gray-300 rounded-xl pt-6 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm"
+                            className="w-full text-black border border-gray-300 rounded-xl pt-6 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm"
                             required
                             disabled={loading}
                         />

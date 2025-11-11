@@ -41,7 +41,7 @@ export default function ReceptionistSidebar({
     return (
         <aside
             className={`${isMobile ? 'fixed inset-y-0 left-0 z-50 flex' : 'hidden md:sticky md:top-0 md:flex'} 
-                w-80 bg-gray-50 p-6 flex-col justify-between shadow-2xl`}
+                w-80 bg-gray-50 p-6 flex-col justify-between shadow-2xl h-screen`}
         >
             {/* Top Profile Card */}
             <div className="mb-10">

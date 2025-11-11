@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
     const router = useRouter(); 
-    
-    // ... (State variables remain the same)
     const [isLoading, setIsLoading] = useState(false);
     const [loadingRole, setLoadingRole] = useState<string | null>(null);
 

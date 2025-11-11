@@ -2,29 +2,29 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import {
-  Loader2,
-  Check,
-  AlertCircle,
-  BedDouble,
-  DollarSign,
-  Users,
-  Tag,
-  Clock,
-  ArrowLeft,
-  Settings,
+  Loader2,
+  Check,
+  AlertCircle,
+  BedDouble,
+  DollarSign,
+  Users,
+  Tag,
+  Clock,
+  ArrowLeft,
+  Settings,
 } from "lucide-react";
 
 // --- Interfaces ---
 
 export interface Room {
-  _id: string;
-  roomNumber: string;
-  type: string;
-  price: number;
-  capacity: number;
-  amenities: string[];
-  isAvailable: boolean;
-  status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
+  _id: string;
+  roomNumber: string;
+  type: string;
+  price: number;
+  capacity: number;
+  amenities: string[];
+  isAvailable: boolean;
+  status: "Available" | "Booked" | "Checked-In" | "Checked-Out";
 }
 
 const statusOptions: Room["status"][] = ["Available", "Booked", "Checked-In"];
@@ -32,172 +32,178 @@ const statusOptions: Room["status"][] = ["Available", "Booked", "Checked-In"];
 // --- Utility Functions ---
 
 /**
- * Custom function to extract the ID from the URL path.
- */
+ * Custom function to extract the ID from the URL path.
+ */
 const getIdFromPath = (): string | null => {
-  if (typeof window === 'undefined') return null; // Ensure this runs only on the client
-  const parts = window.location.pathname.split('/');
-  const id = parts[parts.length - 1];
-  // Basic validation to ensure the ID looks like an actual MongoDB ID (e.g., at least 1 character)
-  return id && id.length > 0 ? id : null;
+  if (typeof window === 'undefined') return null; // Ensure this runs only on the client
+  const parts = window.location.pathname.split('/');
+  const id = parts[parts.length - 1];
+  // Basic validation to ensure the ID looks like an actual MongoDB ID (e.g., at least 1 character)
+  return id && id.length > 0 ? id : null;
 };
 
 /**
- * Custom hook to simulate router.push functionality for compatibility.
- */
+ * Custom hook to simulate router.push functionality for compatibility.
+ */
 const useSimpleRouter = () => ({
-  push: (path: string) => {
-    window.location.href = path;
-  },
+  push: (path: string) => {
+    window.location.href = path;
+  },
 });
 
 // --- Main Component ---
 
 export default function EditRoomPage() {
-  // Use state to hold the ID, initialized to null to avoid hydration mismatch
-  const [roomId, setRoomId] = useState<string | null>(null); 
-  const simpleRouter = useSimpleRouter(); 
+  // Use state to hold the ID, initialized to null to avoid hydration mismatch
+  const [roomId, setRoomId] = useState<string | null>(null);
+  const simpleRouter = useSimpleRouter();
 
-  const [room, setRoom] = useState<Room | null>(null);
-  const [status, setStatus] = useState<Room["status"]>('Available');
+  const [room, setRoom] = useState<Room | null>(null);
+  const [status, setStatus] = useState<Room["status"]>('Available');
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState("");
 
-  // 1. Resolve ID on mount to prevent hydration error
-  useEffect(() => {
-    setRoomId(getIdFromPath());
-  }, []);
+  // 1. Resolve ID on mount to prevent hydration error
+  useEffect(() => {
+    setRoomId(getIdFromPath());
+  }, []);
 
-  const fetchRoom = useCallback(async (idToFetch: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/${idToFetch}`);
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to fetch room details");
-      }
-      
-      const data: Room = await res.json();
-      setRoom(data);
-      
-      // Initialize local status state from fetched room status
-      if (statusOptions.includes(data.status)) {
-        setStatus(data.status);
-      } else {
-        setStatus('Available');
-      }
+  const fetchRoom = useCallback(async (idToFetch: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/${idToFetch}`);
 
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError("Error fetching room: " + err.message);
-      } else {
-        setError("An unknown error occurred while fetching the room.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      if (!res.ok) {
+        // Attempt to parse JSON error message, fallback to default
+        const errorData = await res.json().catch(() => ({ message: "API returned an error status." })); 
+        throw new Error(errorData.message || "Failed to fetch room details");
+      }
 
-  // 2. Trigger fetch only after roomId is resolved
-  useEffect(() => {
-    if (roomId) {
-      fetchRoom(roomId);
-    } else if (roomId === null && !loading) {
-        // If ID is null after mount, means invalid URL path
-        setError("Invalid URL or Room ID not found.");
-        setLoading(false);
-    }
-  // FIX: Added 'loading' to the dependency array to satisfy the linter rule
-  }, [roomId, fetchRoom, loading]);
+      const data: Room = await res.json();
+      setRoom(data);
 
-  const handleSave = async () => {
-    setSaving(true);
-    setError(null);
-    setSuccessMsg("");
+      // Initialize local status state from fetched room status
+      if (statusOptions.includes(data.status)) {
+        setStatus(data.status);
+      } else {
+        setStatus('Available');
+      }
 
-    try {
-      if (!roomId) {
-        throw new Error("Cannot save, Room ID is missing.");
-      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError("Error fetching room: " + err.message);
+      } else {
+        setError("An unknown error occurred while fetching the room.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/${roomId}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
+  // 2. Trigger fetch only after roomId is resolved, and handle missing ID
+  useEffect(() => {
+    if (roomId) {
+      fetchRoom(roomId);
+    } else if (roomId === null) { 
+        // FIX: If ID is null after initial resolution, stop loading and show error.
+        // The previous `!loading` check caused the infinite loop since loading starts as true.
+        setError("Invalid URL or Room ID not found. Please check the address.");
+        setLoading(false);
+    }
+  // Removed 'loading' from dependencies as it's no longer needed for the logic and satisfies the linter
+  }, [roomId, fetchRoom]); 
 
-      const data: { message: string } = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to update room status");
-      }
+  const handleSave = async () => {
+    setSaving(true);
+    setError(null);
+    setSuccessMsg("");
 
-      setSuccessMsg(`Room status updated to "${status}" successfully! Redirecting...`);
-      setRoom(prev => prev ? { ...prev, status: status } : null);
+    try {
+      if (!roomId) {
+        throw new Error("Cannot save, Room ID is missing.");
+      }
 
-      setTimeout(() => simpleRouter.push("/features/admine/rooms"), 1500);
-      
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError("Error saving changes: " + err.message);
-      } else {
-        setError("An unknown error occurred while saving changes.");
-      }
-    } finally {
-      setSaving(false);
-    }
-  };
+      const res = await fetch(`https://hms-backend-2k1m.onrender.com/api/rooms/${roomId}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
 
-  const statusBadgeColor = (status: Room["status"]) => {
-    switch (status) {
-      case "Available": return "bg-green-100 text-green-800 border-green-400";
-      case "Booked": return "bg-yellow-100 text-yellow-800 border-yellow-400";
-      case "Checked-In": return "bg-blue-100 text-blue-800 border-blue-400";
-      default: return "bg-gray-100 text-gray-800 border-gray-400";
-    }
-  };
+      const data: { message: string } = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to update room status");
+      }
 
-  if (loading || roomId === null) return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8">
-      <Loader2 className="animate-spin w-12 h-12 text-blue-600" />
-      <span className="mt-4 text-xl font-medium text-gray-700">
-        Loading Room {roomId ? roomId.substring(0, 8) + '...' : 'details'}...
-      </span>
-    </div>
-  );
+      setSuccessMsg(`Room status updated to "${status}" successfully! Redirecting...`);
+      setRoom(prev => prev ? { ...prev, status: status } : null);
 
-  if (error && !room) return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 p-8">
-      <AlertCircle className="w-12 h-12 text-red-600 mb-4" />
-      <div className="text-xl font-semibold text-red-800">Error Loading Room</div>
-      <div className="text-gray-600 mt-2 text-center max-w-lg">{error}</div>
-      <button
-        onClick={() => simpleRouter.push("/features/admine/rooms")}
-        className="mt-6 flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-      >
-        <ArrowLeft className="w-4 h-4" /> Back to Rooms List
-      </button>
-    </div>
-  );
+      setTimeout(() => simpleRouter.push("/features/admine/rooms"), 1500);
 
-  if (!room) return null; // Should be covered by error state but good practice
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError("Error saving changes: " + err.message);
+      } else {
+        setError("An unknown error occurred while saving changes.");
+      }
+    } finally {
+      setSaving(false);
+    }
+  };
 
-  const DetailItem = ({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value: string | number }) => (
-    <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg shadow-sm">
-      <Icon className="w-5 h-5 text-blue-500 flex-shrink-0" />
-      <div>
-        <div className="text-xs font-medium text-gray-500">{label}</div>
-        <div className="text-base font-semibold text-gray-800">{value}</div>
-      </div>
-    </div>
-  );
+  const statusBadgeColor = (status: Room["status"]) => {
+    switch (status) {
+      case "Available": return "bg-green-100 text-green-800 border-green-400";
+      case "Booked": return "bg-yellow-100 text-yellow-800 border-yellow-400";
+      case "Checked-In": return "bg-blue-100 text-blue-800 border-blue-400";
+      default: return "bg-gray-100 text-gray-800 border-gray-400";
+    }
+  };
 
-  return (
-   <div className="min-h-screen bg-gray-100 font-sans p-4 sm:p-8 flex justify-center">
+  // The condition for infinite loading was here:
+  // if (loading || roomId === null) return (/* ... Loader ... */);
+  // With the fix, if roomId is null, loading is set to false, and the next 'if' handles the error.
+  
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8">
+      <Loader2 className="animate-spin w-12 h-12 text-blue-600" />
+      <span className="mt-4 text-xl font-medium text-gray-700">
+        Loading Room {roomId ? roomId.substring(0, 8) + '...' : 'details'}...
+      </span>
+    </div>
+  );
+
+  if (error && !room) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 p-8">
+      <AlertCircle className="w-12 h-12 text-red-600 mb-4" />
+      <div className="text-xl font-semibold text-red-800">Error Loading Room</div>
+      <div className="text-gray-600 mt-2 text-center max-w-lg">{error}</div>
+      <button
+        onClick={() => simpleRouter.push("/features/admine/rooms")}
+        className="mt-6 flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back to Rooms List
+      </button>
+    </div>
+  );
+
+  if (!room) return null; // Should be covered by error state but good practice
+
+  const DetailItem = ({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value: string | number }) => (
+    <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg shadow-sm">
+      <Icon className="w-5 h-5 text-blue-500 flex-shrink-0" />
+      <div>
+        <div className="text-xs font-medium text-gray-500">{label}</div>
+        <div className="text-base font-semibold text-gray-800">{value}</div>
+      </div>
+    </div>
+  );
+
+  return (
+   <div className="min-h-screen bg-gray-100 font-sans p-4 sm:p-8 flex justify-center">
   <div className="w-full max-w-5xl">
     {/* Header and Back Button */}
     <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -319,5 +325,5 @@ export default function EditRoomPage() {
   </div>
 </div>
 
-  );
+  );
 }
