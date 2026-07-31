@@ -16,7 +16,6 @@ interface GuestSidebarProps {
   isMobile?: boolean;
   active?: string; // Optional active route
   notifications?: { [key: string]: number };
-  // NEW PROP: Function to close the sidebar after a link is clicked
   onLinkClick: () => void; 
 }
 
@@ -37,14 +36,14 @@ export default function GuestSidebar({
 
   return (
     <aside
-      className={`${isMobile ? "fixed inset-y-0 left-0 z-50 flex" : "hidden md:sticky md:top-0 md:flex"} 
-        w-80 bg-gray-50 p-6 flex-col justify-between shadow-2xl h-screen `}
-    
+      className={`${
+        isMobile ? "fixed inset-y-0 left-0 z-50 flex" : "hidden md:sticky md:top-0 md:flex"
+      } w-80 bg-gray-50 p-6 flex-col h-dvh shadow-2xl overflow-hidden`}
     >
       {/* Top Profile Card */}
-      <div className="mb-10">
-        <div className="flex items-center gap-4 bg-white rounded-2xl p-4 ">
-          <Building2 className="w-10 h-10 text-blue-600" />
+      <div className="mb-6 flex-shrink-0">
+        <div className="flex items-center gap-4 bg-white rounded-2xl p-4 shadow-sm">
+          <Building2 className="w-10 h-10 text-blue-600 flex-shrink-0" />
           <div>
             <h1 className="text-lg font-semibold text-gray-900">Royal Stay Hotel</h1>
             <p className="text-sm text-gray-500">Guest Dashboard</p>
@@ -52,8 +51,8 @@ export default function GuestSidebar({
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex flex-col gap-4">
+      {/* Navigation - Make only this middle area scrollable if needed */}
+      <nav className="flex flex-col gap-3 overflow-y-auto flex-1 pr-1">
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = active === link.href;
@@ -63,7 +62,7 @@ export default function GuestSidebar({
               href={link.href}
               onClick={onLinkClick}
               className={`
-                relative flex items-center gap-4 px-5 py-3 rounded-2xl font-medium text-gray-700 transition-all
+                relative flex items-center gap-4 px-5 py-3 rounded-2xl font-medium text-gray-700 transition-all flex-shrink-0
                 ${isActive ? "bg-blue-600 text-white shadow-lg" : "bg-white hover:bg-blue-50 hover:scale-[1.03] shadow-md"}
               `}
             >
@@ -84,8 +83,8 @@ export default function GuestSidebar({
         })}
       </nav>
 
-      {/* Logout Card */}
-      <div className="mt-10">
+      {/* Logout Card - Pinned to the bottom */}
+      <div className="pt-6 mt-auto flex-shrink-0">
         <Link
           href="/"
           onClick={onLinkClick} 
