@@ -146,7 +146,7 @@ export default function Home() {
         : "text-gray-500"
     }`}
   >
-    ☁️ Running on a shared cloud — loading might take a few seconds
+    ☁️ Running on a shared cloud — loading might take a few seconds...
   </p>
 </header>
 
