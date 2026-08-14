@@ -17,8 +17,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "ignoreDeprecations": "5.0",
-    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
