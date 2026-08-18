@@ -109,8 +109,13 @@ const isCardProcessing = actionLoading && normalizedStatus !== "checked-in";
 
       {/* Room Image */}
       <div className="relative h-36 w-full rounded-2xl overflow-hidden mb-3">
-        <Image src={imgSrc} alt={room.name} fill style={{ objectFit: "cover" }} className="rounded-2xl" />
-      </div>
+<Image
+  src={imgSrc}
+  alt={`${room.name} room`}
+  fill
+  style={{ objectFit: "cover" }}
+  className="rounded-2xl"
+/>      </div>
 
       {/* Room Name */}
       <h3 className="text-lg font-semibold text-gray-900">{room.name}</h3>
