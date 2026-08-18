@@ -88,11 +88,9 @@ const statusColor =
     buttonLabel || room.status // Fallback to room status if no action is defined
   );
   
-  // Determine if the *whole card* should have a "processing" overlay
-  const isCardProcessing = actionLoading && normalizedStatus !== "checked-in";
-  // The 'checked-in' status is handled differently since its loading is local to API call.
-  // For 'available' and 'booked', the loading state implies navigation is happening.
-
+  // Determine if the whole card should have a processing overlay
+// while navigation is starting for Book Now and Check In.
+const isCardProcessing = actionLoading && normalizedStatus !== "checked-in";
 
   return (
     <div className={`relative bg-white rounded-2xl shadow-lg p-5 flex flex-col gap-3 transition-transform ${
