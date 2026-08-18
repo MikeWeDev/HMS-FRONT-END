@@ -99,9 +99,11 @@ export default function Home() {
                 roleClasses = 'bg-gray-50 text-gray-800 border-2 border-gray-300 hover:bg-gray-100 transform hover:scale-[1.05]';
         }
 
-        const loadingClasses = isCurrentLoading 
-            ? 'opacity-70 cursor-not-allowed scale-100 bg-opacity-70'
-            : ''; 
+       const loadingClasses = isCurrentLoading 
+    ? 'opacity-70 cursor-not-allowed scale-100 bg-opacity-70'
+    : isLoading
+        ? 'opacity-50 cursor-not-allowed'
+        : '';
 
         return {
             className: `${baseClasses} ${roleClasses} ${loadingClasses}`,
