@@ -31,15 +31,14 @@ export default function RoomCard({ room, status }: Props) {
   const normalizedStatus = status.toLowerCase();
 
   // Status dot color
- const statusColor =
-    normalizedStatus === "available"
-      ? "bg-green-500"
-      : normalizedStatus === "booked"
-      ? "bg-yellow-500"
-      : normalizedStatus === "checked-in"
-      ? "bg-red-500" 
-      : "bg-gray-400";
-
+const statusColor =
+  normalizedStatus === "available"
+    ? "bg-green-500"
+    : normalizedStatus === "booked"
+    ? "bg-yellow-500"
+    : normalizedStatus === "checked-in"
+    ? "bg-red-500"
+    : "bg-gray-400";
   // Button logic
   let buttonLabel = "";
   let onClickHandler: () => void = () => {};
