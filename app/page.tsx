@@ -7,7 +7,9 @@ export default function Home() {
     const router = useRouter(); 
     const [isLoading, setIsLoading] = useState(false);
     const [loadingRole, setLoadingRole] = useState<string | null>(null);
-
+    const resetLoading = () => {
+   resetLoading();
+};
     const handleDemoLogin = async (role: string, redirectPath: string) => {
         
         if (isLoading) return; 
@@ -57,15 +59,14 @@ export default function Home() {
                 alert(`Demo login failed: ${data.message}`); 
                 
                 // Only clear state on failure so the user can try again
-                setIsLoading(false); 
-                setLoadingRole(null);
+               resetLoading(); 
+        
             }
         } catch (error) {
     console.error('Network or system error during demo login:', error);
     alert('Unable to connect to the demo server. Please try again in a moment.');
     
-    setIsLoading(false);
-    setLoadingRole(null);
+   resetLoading();
 }
     };
 
