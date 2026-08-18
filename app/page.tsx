@@ -61,13 +61,12 @@ export default function Home() {
                 setLoadingRole(null);
             }
         } catch (error) {
-            console.error('Network or system error during demo login:', error);
-            alert('A network error occurred. Ensure your Express server is running on localhost:5000.');
-            
-            // Only clear state on error
-            setIsLoading(false); 
-            setLoadingRole(null);
-        }
+    console.error('Network or system error during demo login:', error);
+    alert('Unable to connect to the demo server. Please try again in a moment.');
+    
+    setIsLoading(false);
+    setLoadingRole(null);
+}
     };
 
 
