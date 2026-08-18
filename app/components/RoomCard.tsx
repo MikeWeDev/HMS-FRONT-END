@@ -139,17 +139,23 @@ const isCardProcessing = actionLoading && normalizedStatus !== "checked-in";
       </div>
 
       {/* Call to Action */}
-      <button
-        onClick={onClickHandler}
-      disabled={buttonDisabled || !buttonLabel}     
-     className={`mt-auto py-2 rounded-xl font-medium shadow-md transition w-full ${
-    buttonLabel // <--- Check if any action button label was set (Book, Check In, Check Out)
-        ? "bg-blue-600 text-white hover:bg-blue-700"
-        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-} ${actionLoading ? 'bg-blue-400 cursor-wait' : ''}`}
-      >
-        {displayButtonContent}
-      </button>
+    <button
+  onClick={onClickHandler}
+  disabled={buttonDisabled || !buttonLabel}
+  aria-busy={actionLoading}
+  aria-label={
+    actionLoading
+      ? `${buttonLabel} in progress`
+      : buttonLabel || `${room.name} unavailable`
+  }
+  className={`mt-auto py-2 rounded-xl font-medium shadow-md transition w-full ${
+    buttonLabel
+      ? "bg-blue-600 text-white hover:bg-blue-700"
+      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  } ${actionLoading ? "bg-blue-400 cursor-wait" : ""}`}
+>
+  {displayButtonContent}
+</button>
     </div>
   );
 }
