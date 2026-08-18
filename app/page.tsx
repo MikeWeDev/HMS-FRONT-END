@@ -186,6 +186,7 @@ export default function Home() {
                                 onClick={() => handleDemoLogin('guest', '/features/guest')}
                                 className={guestProps.className}
                                 disabled={guestProps.disabled}
+                                aria-busy={isLoading && loadingRole === 'guest'}
                             >
                                 {guestProps.content}
                             </button>
@@ -194,6 +195,7 @@ export default function Home() {
                                 onClick={() => handleDemoLogin('receptionist', '/features/receptionist')}
                                 className={receptionistProps.className}
                                 disabled={receptionistProps.disabled}
+                                 aria-busy={isLoading && loadingRole === 'receptionist'}
                             >
                                 {receptionistProps.content}
                             </button>
@@ -202,6 +204,7 @@ export default function Home() {
                                 onClick={() => handleDemoLogin('admin', '/features/admine')}
                                 className={adminProps.className}
                                 disabled={adminProps.disabled}
+                                aria-busy={isLoading && loadingRole === 'admin'}
                             >
                                 {adminProps.content}
                             </button>
